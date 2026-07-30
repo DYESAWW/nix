@@ -90,12 +90,14 @@ in
     spicetify = {
       enable = true;
       enabledExtensions = with spicePkgs.extensions; [
-        betterGenres
+        copyLyrics
+	betterGenres
         playNext
         fullAlbumDate
         hidePodcasts
         shuffle
-        beautifulLyrics
+	beautifulLyrics
+        copyToClipboard
 	volumePercentage
       ];
 
