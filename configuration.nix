@@ -80,6 +80,7 @@
 	wget
 	bluez-tools
 	bluez
+	sbctl
 	protonup-qt
 	protontricks
 	wine64
