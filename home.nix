@@ -9,7 +9,7 @@ let
       owner = "sanoojes";
       repo = "spicetify-lucid";
       rev = "main";
-      hash = ""; # Nix will print the correct hash on first build — paste it in
+      hash = "sha256-J2DlDHs1CHQCfMSwqDAtUzqukWdI3/kQTXl6BoRsBWc";
     };
     nativeBuildInputs = [ pkgs.bun ];
     buildPhase = ''
