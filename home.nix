@@ -120,7 +120,12 @@ in
 
       theme = {
         name = "Lucid";
-        src = lucidTheme;
+        src = pkgs.fetchFromGitLab {
+          owner = "sanoojes";
+          repo = "spicetify-lucid";
+          rev = "main";
+          hash = "sha256-J2DlDHs1CHQCfMSwqDAtUzqukWdI3/kQTXl6BoRsBWc=";
+        };
       };
 #     theme = spicePkgs.themes.catppuccin;
 #     colorScheme = "mocha";
