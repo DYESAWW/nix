@@ -11,11 +11,12 @@ let
     rev = "main";
     hash = "sha256-J2DlDHs1CHQCfMSwqDAtUzqukWdI3/kQTXl6BoRsBWc=";
   };
-  nativeBuildInputs = [ pkgs.bun pkgs.cacert ];
+  nativeBuildInputs = [ pkgs.bun pkgs.cacert pkgs.nodejs ];
   buildPhase = ''
     export HOME=$TMPDIR
     bun install --frozen-lockfile
-    bun run build
+    patchShebangs node_modules/.bin
+    bun run build:theme
   '';
   installPhase = ''
     mkdir -p $out
@@ -24,8 +25,8 @@ let
 
   outputHashMode = "recursive";
   outputHashAlgo = "sha256";
-  outputHash = "";  # you'll get this from the next hash-mismatch error
-  };
+  outputHash = "";
+};
 
   ellenJoeCursor = pkgs.stdenvNoCC.mkDerivation {
     pname = "ellen-joe-cursor";
