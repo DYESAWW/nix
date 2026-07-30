@@ -100,6 +100,7 @@
         fastfetch
         vscodium
         obs-studio
+	killall
 	inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
 	inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];  
