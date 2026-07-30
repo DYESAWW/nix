@@ -78,6 +78,7 @@ in
       
       initExtra = ''
 	source /home/harid/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh
+      '';
 
       oh-my-zsh = {
         enable = true;
