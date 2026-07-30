@@ -100,6 +100,10 @@
 	copyq
 	ayugram-desktop
 	discord
+	(discord.override {
+        withOpenASAR = true;
+        withVencord = true;
+        })
         fastfetch
         vscodium
         obs-studio
