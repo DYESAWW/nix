@@ -1,6 +1,6 @@
 { config, pkgs, inputs, ... }:
 let
-  spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
+  spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
 
   ellenJoeCursor = pkgs.stdenvNoCC.mkDerivation {
     pname = "ellen-joe-cursor";
@@ -99,7 +99,8 @@ in
       marketplace
     ];
 
-    theme = spicePkgs.themes.lucid;
+    theme = spicePkgs.themes.catppuccin;
+    colorScheme = "mocha";
   };
 
 
