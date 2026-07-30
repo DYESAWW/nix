@@ -76,22 +76,42 @@
   environment.systemPackages = with pkgs; [
   	lsd
 	wget
+	protonup-qt
+	protontricks
+	wine64
+	yt-dlp
+	pwvucontrol
 	git
         kitty
         firefox
         kdePackages.dolphin
         kdePackages.kio-admin
 	hyprpolkitagent
+	hypridle
+	hyprshutdown
+	grimblast
+	playerctl
+	gamescope
+	steam
+	steam-run
+	copyq
+	ayugram-desktop
+	discord
         fastfetch
         vscodium
         obs-studio
 	inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
 	inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];  
-  
-  programs.hyprland = {
-	enable = true;
-	xwayland.enable = true;
+  programs = {
+    hyprland = {
+      enable = true;
+      xwayland.enable = true;
+    };
+
+    steam = {
+      enable = true;
+    };
   };
   
   security.polkit.enable = true;

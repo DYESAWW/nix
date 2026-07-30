@@ -30,7 +30,6 @@
       modules = [
 	{ nixpkgs.hostPlatform = "x86_64-linux"; }
         ./configuration.nix
-        inputs.noctalia.nixosModules.default
         ./noctalia.nix
 
         home-manager.nixosModules.home-manager
