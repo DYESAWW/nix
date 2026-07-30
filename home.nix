@@ -101,8 +101,9 @@ in
         marketplace
       ];
 
-      theme = spicePkgs.themes.catppuccin;
-      colorScheme = "mocha";
+       theme = 'marketplace';
+#      theme = spicePkgs.themes.catppuccin;
+#      colorScheme = "mocha";
     };
   };
 
