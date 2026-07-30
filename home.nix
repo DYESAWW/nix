@@ -59,49 +59,51 @@ in
     hyprcursor.enable = true;
   };
 
-  programs.zsh = {
-    enable = true;
-    shellAliases = {
-      ls = "lsd -a";
-      try = "nix-shell -p";
-      batt = "dualsensectl battery";
-      hswitch = "home-manager switch";
-      rebuild = "sudo nixos-rebuild switch";
-      hconf = "sudo nano /etc/nixos/home.nix";
-      sysconf = "sudo nano /etc/nixos/configuration.nix";
-      flake = "sudo nano /etc/nixos/flake.nix";
-      frebuild = "sudo nixos-rebuild switch --flake /etc/nixos#nixos";
-      commit = "cd /etc/nixos && sudo git add -A && sudo git commit -m 'generic commit'"
+  programs = {
+    zsh = {
+      enable = true;
+      shellAliases = {
+        ls = "lsd -a";
+        try = "nix-shell -p";
+        batt = "dualsensectl battery";
+        hswitch = "home-manager switch";
+        rebuild = "sudo nixos-rebuild switch";
+        hconf = "sudo nano /etc/nixos/home.nix";
+        sysconf = "sudo nano /etc/nixos/configuration.nix";
+        flake = "sudo nano /etc/nixos/flake.nix";
+        frebuild = "sudo nixos-rebuild switch --flake /etc/nixos#nixos";
+        commit = "cd /etc/nixos && sudo git add -A && sudo git commit -m 'generic commit'";
+      };
     };
-  };
 
-  programs.atuin = {
-    enable = true;
-    enableZshIntegration = true;
-  };
+    atuin = {
+      enable = true;
+      enableZshIntegration = true;
+    };
 
-  programs.oh-my-posh = {
-    enable = true;
-    useTheme = "catppuccin_mocha";
-  };
+    oh-my-posh = {
+      enable = true;
+      useTheme = "catppuccin_mocha";
+    };
 
-  programs.spicetify = {
-    enable = true;
-    enabledExtensions = with spicePkgs.extensions; [
-      betterGenres
-      playNext
-      fullAlbumDate 
-      hidePodcasts
-      shuffle
-      beautifulLyrics
-    ];
+    spicetify = {
+      enable = true;
+      enabledExtensions = with spicePkgs.extensions; [
+        betterGenres
+        playNext
+        fullAlbumDate
+        hidePodcasts
+        shuffle
+        beautifulLyrics
+      ];
 
-    enabledCustomApps = with spicePkgs.apps; [
-      marketplace
-    ];
+      enabledCustomApps = with spicePkgs.apps; [
+        marketplace
+      ];
 
-    theme = spicePkgs.themes.catppuccin;
-    colorScheme = "mocha";
+      theme = spicePkgs.themes.catppuccin;
+      colorScheme = "mocha";
+    };
   };
 
 
