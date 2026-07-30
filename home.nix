@@ -1,6 +1,26 @@
 { config, pkgs, inputs, ... }:
 let
   spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+  
+  lucidTheme = pkgs.stdenv.mkDerivation {
+    pname = "spicetify-lucid";
+    version = "unstable";
+    src = pkgs.fetchgit {
+      url = "https://gitlab.com/sanoojes/spicetify-lucid.git";
+      rev = "main";
+      hash = "";
+    };
+    nativeBuildInputs = [ pkgs.bun ];
+    buildPhase = ''
+      export HOME=$TMPDIR
+      bun install --frozen-lockfile
+      bun run build
+    '';
+    installPhase = ''
+      mkdir -p $out
+      cp -r dist/* $out/
+    '';
+  };
 
   ellenJoeCursor = pkgs.stdenvNoCC.mkDerivation {
     pname = "ellen-joe-cursor";
@@ -97,13 +117,12 @@ in
         beautifulLyrics
       ];
 
-      enabledCustomApps = with spicePkgs.apps; [
-        marketplace
-      ];
-
-       theme = 'marketplace';
-#      theme = spicePkgs.themes.catppuccin;
-#      colorScheme = "mocha";
+      theme = {
+        name = "Lucid";
+        src = lucidTheme;
+      };
+#     theme = spicePkgs.themes.catppuccin;
+#     colorScheme = "mocha";
     };
   };
 
