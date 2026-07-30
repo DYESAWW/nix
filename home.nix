@@ -98,10 +98,10 @@ in
         beautifulLyrics
       ];
 
-#      theme = {
-#        name = "Lucid";
-#        src = lucidTheme;
-#      };
+      theme = {
+        name = "Lucid";
+        src = ./themes/Lucid;
+      };
 #     theme = spicePkgs.themes.catppuccin;
 #     colorScheme = "mocha";
     };
