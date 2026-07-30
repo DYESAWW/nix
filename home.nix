@@ -12,12 +12,13 @@ let
     hash = "sha256-J2DlDHs1CHQCfMSwqDAtUzqukWdI3/kQTXl6BoRsBWc=";
   };
   nativeBuildInputs = [ pkgs.bun pkgs.cacert pkgs.nodejs ];
+  
   buildPhase = ''
     export HOME=$TMPDIR
     bun install --frozen-lockfile
-    patchShebangs node_modules/.bin
-    bun run build:theme
-  '';
+    patchShebangs node_modules
+    node node_modules/.bin/spicetify-creator build
+    '';
   installPhase = ''
     mkdir -p $out
     cp -r dist/* $out/
