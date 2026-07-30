@@ -51,7 +51,7 @@
   ## FONTS ##
   fonts.packages = with pkgs; [
     noto-fonts
-    nerd-fonts.firacode
+    nerd-fonts.fira-code
     nerd-fonts.inconsolata-go
     rubik
   ];
