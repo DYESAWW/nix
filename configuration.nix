@@ -76,6 +76,7 @@
   environment.systemPackages = with pkgs; [
   	lsd
 	wget
+	bluez-tools
 	bluez
 	protonup-qt
 	protontricks
