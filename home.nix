@@ -1,6 +1,17 @@
 { config, pkgs, inputs, ... }:
 let
   spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
+
+  ellenJoeCursor = pkgs.stdenvNoCC.mkDerivation {
+    pname = "ellen-joe-cursor";
+    version = "1.0";
+    src = ./cursors/Ellen-Joe;
+    dontBuild = true;
+    installPhase = ''
+      mkdir -p $out/share/icons/Ellen-Joe
+      cp -r $src/* $out/share/icons/Ellen-Joe/
+    '';
+  };
 in
 {
   # Home Manager needs a bit of information about you and the paths it should
@@ -38,6 +49,14 @@ in
     #   echo "Hello, ${config.home.username}!"
     # '')
   ];
+  home.pointerCursor = {
+    name = "Ellen-Joe";
+    package = ellenJoeCursor;
+    size = 24;
+    x11.enable = true;
+    gtk.enable = true;
+    hyprcursor.enable = true;
+  };
 
   programs.zsh = {
     enable = true;
