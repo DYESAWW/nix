@@ -1,5 +1,7 @@
-{ config, pkgs, ... }:
-
+{ config, pkgs, inputs, ... }:
+let
+  spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
+in
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
@@ -61,6 +63,19 @@
     enable = true;
     useTheme = "catppuccin_mocha";
   };
+
+  programs.spicetify = {
+    enable = true;
+    enabledExtensions = with spicePkgs.extensions; [
+      adblockify
+      hidePodcasts
+      shuffle
+    ];
+    theme = spicePkgs.themes.catppuccin;
+    colorScheme = "mocha";
+  };
+
+
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
