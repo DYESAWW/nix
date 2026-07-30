@@ -1,33 +1,6 @@
 { config, pkgs, inputs, ... }:
 let
   spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
-  
-  lucidTheme = pkgs.stdenv.mkDerivation {
-  pname = "spicetify-lucid";
-  version = "unstable";
-  src = pkgs.fetchFromGitLab {
-    owner = "sanoojes";
-    repo = "spicetify-lucid";
-    rev = "main";
-    hash = "sha256-J2DlDHs1CHQCfMSwqDAtUzqukWdI3/kQTXl6BoRsBWc=";
-  };
-  nativeBuildInputs = [ pkgs.bun pkgs.cacert pkgs.nodejs ];
-  
-  buildPhase = ''
-    export HOME=$TMPDIR
-    bun install --frozen-lockfile
-    patchShebangs node_modules
-    node node_modules/.bin/spicetify-creator build
-    '';
-  installPhase = ''
-    mkdir -p $out
-    cp -r dist/* $out/
-  '';
-
-  outputHashMode = "recursive";
-  outputHashAlgo = "sha256";
-  outputHash = "";
-};
 
   ellenJoeCursor = pkgs.stdenvNoCC.mkDerivation {
     pname = "ellen-joe-cursor";
@@ -59,6 +32,7 @@ in
   # environment  
 
   home.packages = [
+	pkgs.spicetify-cli
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
@@ -124,10 +98,10 @@ in
         beautifulLyrics
       ];
 
-      theme = {
-        name = "Lucid";
-        src = lucidTheme;
-      };
+#      theme = {
+#        name = "Lucid";
+#        src = lucidTheme;
+#      };
 #     theme = spicePkgs.themes.catppuccin;
 #     colorScheme = "mocha";
     };
