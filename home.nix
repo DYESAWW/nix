@@ -75,6 +75,9 @@ in
         frebuild = "sudo nixos-rebuild switch --flake /etc/nixos#nixos";
         commit = "cd /etc/nixos && sudo git add -A && sudo git commit -m 'generic commit'";
       };
+      
+      initExtra = ''
+	source /home/harid/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh
 
       oh-my-zsh = {
         enable = true;

@@ -89,6 +89,7 @@
         kitty
         firefox
         kdePackages.dolphin
+	kdePackages.ark
         kdePackages.kio-admin
 	hyprpolkitagent
 	hypridle
