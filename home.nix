@@ -50,6 +50,7 @@ in
     # '')
   ];
   home.pointerCursor = {
+    enable = true;
     name = "Ellen-Joe";
     package = ellenJoeCursor;
     size = 24;
