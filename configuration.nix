@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   imports =
@@ -41,14 +41,12 @@
 
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "et_EE.UTF-8";
-    LC_IDENTIFICATION = "et_EE.UTF-8";
     LC_MEASUREMENT = "et_EE.UTF-8";
     LC_MONETARY = "et_EE.UTF-8";
     LC_NAME = "et_EE.UTF-8";
     LC_NUMERIC = "et_EE.UTF-8";
-    LC_PAPER = "et_EE.UTF-8";
     LC_TELEPHONE = "et_EE.UTF-8";
-    LC_TIME = "et_EE.UTF-8";
+    LC_TIME = "en_US.UTF-8";
   };
 
   # Configure keymap in X11
@@ -83,9 +81,12 @@
         firefox
         kdePackages.dolphin
         kdePackages.kio-admin
+	hyprpolkitagent
         fastfetch
         vscodium
         obs-studio
+	inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
+	inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];  
   
   programs.hyprland = {
@@ -93,14 +94,7 @@
 	xwayland.enable = true;
   };
   
-  services.displayManager.sddm = {
-	enable = true;
-
-	wayland = {
-	  enable = true;
-	  compositor = "kwin";
- };
-};
+  security.polkit.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
