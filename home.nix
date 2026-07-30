@@ -87,12 +87,19 @@ in
   programs.spicetify = {
     enable = true;
     enabledExtensions = with spicePkgs.extensions; [
-      adblockify
+      betterGenres
+      playNext
+      fullAlbumDate 
       hidePodcasts
       shuffle
+      beautifulLyrics
     ];
-    theme = spicePkgs.themes.catppuccin;
-    colorScheme = "mocha";
+
+    enabledCustomApps = with spicePkgs.apps; [
+      marketplace
+    ];
+
+    theme = spicePkgs.themes.lucid;
   };
 
 
