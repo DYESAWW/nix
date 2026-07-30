@@ -2,26 +2,7 @@
 let
   spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
   
-  lucidTheme = pkgs.stdenv.mkDerivation {
-    pname = "spicetify-lucid";
-    version = "unstable";
-    src = pkgs.fetchFromGitLab {
-      owner = "sanoojes";
-      repo = "spicetify-lucid";
-      rev = "main";
-      hash = "sha256-J2DlDHs1CHQCfMSwqDAtUzqukWdI3/kQTXl6BoRsBWc";
-    };
-    nativeBuildInputs = [ pkgs.bun ];
-    buildPhase = ''
-      export HOME=$TMPDIR
-      bun install --frozen-lockfile
-      bun run build
-    '';
-    installPhase = ''
-      mkdir -p $out
-      cp -r dist/* $out/
-    '';
-  };
+  
 
   ellenJoeCursor = pkgs.stdenvNoCC.mkDerivation {
     pname = "ellen-joe-cursor";
