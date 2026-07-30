@@ -2,7 +2,30 @@
 let
   spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
   
-  
+  lucidTheme = pkgs.stdenv.mkDerivation {
+  pname = "spicetify-lucid";
+  version = "unstable";
+  src = pkgs.fetchFromGitLab {
+    owner = "sanoojes";
+    repo = "spicetify-lucid";
+    rev = "main";
+    hash = "sha256-J2DlDHs1CHQCfMSwqDAtUzqukWdI3/kQTXl6BoRsBWc=";
+  };
+  nativeBuildInputs = [ pkgs.bun pkgs.cacert ];
+  buildPhase = ''
+    export HOME=$TMPDIR
+    bun install --frozen-lockfile
+    bun run build
+  '';
+  installPhase = ''
+    mkdir -p $out
+    cp -r dist/* $out/
+  '';
+
+  outputHashMode = "recursive";
+  outputHashAlgo = "sha256";
+  outputHash = "";  # you'll get this from the next hash-mismatch error
+  };
 
   ellenJoeCursor = pkgs.stdenvNoCC.mkDerivation {
     pname = "ellen-joe-cursor";
@@ -101,12 +124,7 @@ in
 
       theme = {
         name = "Lucid";
-        src = pkgs.fetchFromGitLab {
-          owner = "sanoojes";
-          repo = "spicetify-lucid";
-          rev = "main";
-          hash = "sha256-J2DlDHs1CHQCfMSwqDAtUzqukWdI3/kQTXl6BoRsBWc=";
-        };
+        src = lucidTheme;
       };
 #     theme = spicePkgs.themes.catppuccin;
 #     colorScheme = "mocha";
