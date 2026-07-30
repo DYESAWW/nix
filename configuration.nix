@@ -99,7 +99,6 @@
 	steam-run
 	copyq
 	ayugram-desktop
-	discord
 	(discord.override {
         withOpenASAR = true;
         withVencord = true;
