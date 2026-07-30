@@ -32,7 +32,6 @@ in
   # environment  
 
   home.packages = [
-	pkgs.spicetify-cli
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
@@ -96,15 +95,15 @@ in
         hidePodcasts
         shuffle
         beautifulLyrics
-	volumePercentage
       ];
 
-      theme = {
-        name = "Lucid";
-        src = ./themes/Lucid;
-      };
-#     theme = spicePkgs.themes.catppuccin;
-#     colorScheme = "mocha";
+      enabledCustomApps = with spicePkgs.apps; [
+        marketplace
+      ];
+
+       theme.src = 
+#      theme = spicePkgs.themes.catppuccin;
+#      colorScheme = "mocha";
     };
   };
 
