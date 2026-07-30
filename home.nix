@@ -116,7 +116,7 @@ in
 
     git = {
       enable = true;
-    }
+    };
 
     spicetify = {
       enable = true;
