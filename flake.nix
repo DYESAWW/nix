@@ -25,7 +25,7 @@
   };
 
   outputs = inputs@{ self, nixpkgs, home-manager, ... }: {
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.HaridPC = nixpkgs.lib.nixosSystem {
       specialArgs = { inherit inputs; };
       modules = [
 	{ nixpkgs.hostPlatform = "x86_64-linux"; }
