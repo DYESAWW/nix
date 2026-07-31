@@ -94,8 +94,6 @@
 	kdePackages.ark
         kdePackages.kio-admin
 	hyprpolkitagent
-	hypridle
-	hyprpaper
 	hyprshutdown
 	grimblast
 	playerctl
