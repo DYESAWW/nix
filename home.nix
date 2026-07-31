@@ -121,7 +121,7 @@ in
     };
 
     spicetify = {
-      enable = true;
+      enable = false;
       wayland = true;
       enabledExtensions = with spicePkgs.extensions; [
         copyLyrics
