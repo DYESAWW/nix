@@ -108,6 +108,7 @@
         withOpenASAR = true;
         withVencord = true;
         })
+	libnotify
         fastfetch
         vscodium
         obs-studio
