@@ -122,6 +122,7 @@ in
 
     spicetify = {
       enable = true;
+      wayland = true;
       enabledExtensions = with spicePkgs.extensions; [
         copyLyrics
 	betterGenres
