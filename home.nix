@@ -135,10 +135,10 @@ in
 	volumePercentage
       ];
 
-#      theme = {
-#        name = "Lucid";
-#        src = ./themes/Lucid;
-#      };
+      theme = {
+        name = "Lucid";
+        src = ./themes/Lucid;
+      };
 #     theme = spicePkgs.themes.catppuccin;
 #     colorScheme = "mocha";
     };
