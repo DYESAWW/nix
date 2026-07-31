@@ -121,7 +121,7 @@ in
     };
 
     spicetify = {
-      enable = false;
+      enable = true;
       wayland = true;
       enabledExtensions = with spicePkgs.extensions; [
         copyLyrics
@@ -135,13 +135,13 @@ in
 	volumePercentage
       ];
 
-      theme = {
-        name = "Lucid";
-        src = ./themes/Lucid;
-      };
+#      theme = {
+#        name = "Lucid";
+#        src = ./themes/Lucid;
+#      };
 #     theme = spicePkgs.themes.catppuccin;
 #     colorScheme = "mocha";
-    };
+#    };
   };
 
 
