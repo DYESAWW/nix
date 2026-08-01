@@ -98,6 +98,7 @@
 	kdePackages.kio
 	kdePackages.kio-fuse
 	kdePackages.kio-extras
+	kdePackages.kservice
 	kdePackages.gwenview
 	kdePackages.qtsvg
 	kdePackages.qtstyleplugin-kvantum
