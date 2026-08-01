@@ -94,6 +94,7 @@
         firefox
         kdePackages.dolphin
 	kdePackages.ark
+	rar
         kdePackages.kio-admin
 	kdePackages.kio
 	kdePackages.kio-fuse
@@ -142,6 +143,7 @@
   };
   
   security.polkit.enable = true;
+  services.udisks2.enable = true;
 
 
   system.stateVersion = "26.05";
