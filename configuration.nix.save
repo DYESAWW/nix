@@ -10,6 +10,14 @@
   boot.loader.limine.enable = true;
   boot.loader.limine.secureBoot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  
+  ## DISPLAY MANAGER ##
+  services.displayManager.ly = {
+    enable = true;
+    settings = {
+      animation = "matrix";
+    };
+  };
 
   ## KERNEL ##
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -83,7 +91,6 @@
 	wget
 	bluez-tools
 	bluez
-	ly
 	sbctl
 	protonup-qt
 	protontricks
@@ -93,7 +100,6 @@
 	git
         kitty
         firefox
-	vlc
         kdePackages.dolphin
 	kdePackages.ark
 	rar
