@@ -83,6 +83,7 @@
 	wget
 	bluez-tools
 	bluez
+	ly
 	sbctl
 	protonup-qt
 	protontricks
