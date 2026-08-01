@@ -75,6 +75,8 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  environment.etc."xdg/menus/applications.menu".source = "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
+
   ## PACKAGES ##
   environment.systemPackages = with pkgs; [
   	lsd
@@ -93,6 +95,13 @@
         kdePackages.dolphin
 	kdePackages.ark
         kdePackages.kio-admin
+	kdePackages.kio
+	kdePackages.kio-fuse
+	kdePackages.kio-extras
+	kdePackages.gwenview
+	kdePackages.qtsvg
+	libsForQt5.qt5ct
+	kdePackages.qt6ct
 	hyprpolkitagent
 	hyprshutdown
 	grimblast
