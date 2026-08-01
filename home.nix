@@ -59,6 +59,12 @@ in
     gtk.enable = true;
     hyprcursor.enable = true;
   };
+ 
+  qt = {
+  enable = true;
+  platformTheme.name = "kvantum";
+  style.name = "kvantum";
+  };
 
   programs = {
     zsh = {
