@@ -8,7 +8,7 @@
 
   ## BOOTLOADER ##
   boot.loader.limine.enable = true;
-  boot.loader.limine.secureBoot.enable = true;
+#  boot.loader.limine.secureBoot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
   ## KERNEL ##
@@ -111,7 +111,6 @@
 	kdePackages.qt6ct
 	hyprland-qt-support
 	hyprpicker
-	hyprpolkitagent
 	hyprshutdown
 	grimblast
 	playerctl
@@ -125,6 +124,8 @@
         withVencord = true;
         })
 	libnotify
+	tailscale
+	prismlauncher
         fastfetch
         vscodium
         obs-studio
