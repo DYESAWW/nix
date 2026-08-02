@@ -25,6 +25,7 @@
   services.power-profiles-daemon.enable = true;
   services.upower.enable = true;
   services.openssh.enable = true;
+  services.tailscale.enable = true;
 
   ## HOSTNAME ##
   networking.hostName = "HaridPC";
