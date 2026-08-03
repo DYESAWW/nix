@@ -82,6 +82,7 @@
   environment.systemPackages = with pkgs; [
   	lsd
 	wget
+	fuse
 	bluez-tools
 	bluez
 	ly
