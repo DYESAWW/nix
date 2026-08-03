@@ -122,6 +122,7 @@
 	steam
 	adwsteamgtk
 	steam-run
+	osu-lazer-bin
 	copyq
 	ayugram-desktop
 	(discord.override {
