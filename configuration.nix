@@ -120,6 +120,7 @@
 	playerctl
 	gamescope
 	steam
+	adwsteamgtk
 	steam-run
 	copyq
 	ayugram-desktop
