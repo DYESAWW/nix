@@ -97,6 +97,8 @@
 	git
         kitty
         firefox
+	eartag
+	audacity
 	vlc
 	p7zip
         kdePackages.dolphin
