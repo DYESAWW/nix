@@ -21,6 +21,10 @@
       url = "github:noctalia-dev/noctalia";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    hyprland = {
+      url = "github:hyprwm/Hyprland";
+    };
   };
 
   outputs = inputs@{ self, nixpkgs, home-manager, ... }: {
