@@ -1,5 +1,5 @@
 {
-  description = "NixOS configuration with Noctalia";
+#  description = "NixOS configuration with Noctalia";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -25,6 +25,7 @@
     silentSDDM = {
       url = "github:uiriansan/SilentSDDM";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs@{ self, nixpkgs, home-manager, ... }: {
@@ -34,12 +35,7 @@
 	{ nixpkgs.hostPlatform = "x86_64-linux"; }
         ./configuration.nix
         ./noctalia.nix
-        imports = [inputs.silentSDDM.nixosModules.default];
-        programs.silentSDDM = {
-          enable = true;
-          theme = "catppuccin-mocha";
-        # settings = { ... }; see example in module
-        };
+        ./silentsddm.nix
 
         home-manager.nixosModules.home-manager
         {
