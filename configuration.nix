@@ -1,5 +1,15 @@
 { config, pkgs, inputs, ... }:
-
+let
+  silent-sddm = pkgs.stdenvNoCC.mkDerivation {
+    pname = "silent-sddm";
+    version = "1.0";
+    src = ./themes/silent-sddm;  # path relative to this .nix file
+    installPhase = ''
+      mkdir -p $out/share/sddm/themes/silent-sddm
+      cp -r $src/* $out/share/sddm/themes/silent-sddm/
+    '';
+  };
+in
 {
   imports =
     [
@@ -10,6 +20,17 @@
   boot.loader.limine.enable = true;
   boot.loader.limine.secureBoot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  
+  ## DISPLAY MANAGER ##
+  services.displayManager.sddm = {
+    enable = true;
+
+    wayland = {
+      enable = true;
+      #compositor = "kwin";
+    };
+  };
+  
 
   ## KERNEL ##
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -147,6 +168,7 @@
   programs = {
     hyprland = {
       enable = true;
+      withUWSM = true;
       xwayland.enable = true;
     };
 

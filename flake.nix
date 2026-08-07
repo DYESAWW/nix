@@ -22,6 +22,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    silentSDDM = {
+      url = "github:uiriansan/SilentSDDM";
+      inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs@{ self, nixpkgs, home-manager, ... }: {
@@ -31,6 +34,12 @@
 	{ nixpkgs.hostPlatform = "x86_64-linux"; }
         ./configuration.nix
         ./noctalia.nix
+        imports = [inputs.silentSDDM.nixosModules.default];
+        programs.silentSDDM = {
+          enable = true;
+          theme = "catppuccin-mocha";
+        # settings = { ... }; see example in module
+        };
 
         home-manager.nixosModules.home-manager
         {
