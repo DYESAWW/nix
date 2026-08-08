@@ -36,6 +36,20 @@
       options = [ "fmask=0077" "dmask=0077" ];
     };
 
+  boot.supportedFilesystems = [ "ntfs" ];
+
+  fileSystems."/mnt/sda1" =
+    { device = "/dev/sda1";
+      fsType = "ntfs-3g"; 
+      options = [ "rw" "uid=1000" "nofail"];
+    };
+
+  fileSystems."/mnt/sda2" =
+    { device = "/dev/sda2";
+      fsType = "ntfs-3g"; 
+      options = [ "rw" "uid=1000" "nofail"];
+    };
+
   swapDevices = [ ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
