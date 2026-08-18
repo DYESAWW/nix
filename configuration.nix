@@ -50,6 +50,8 @@ in
   services.upower.enable = true;
   services.openssh.enable = true;
   services.tailscale.enable = true;
+  services.nordvpn.enable = true;
+  networking.firewall.enable = false;
 
   ## HOSTNAME ##
   networking.hostName = "HaridPC";
@@ -91,7 +93,7 @@ in
   users.users."harid" = {
     isNormalUser = true;
     description = "Harid";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "nordvpn" ];
     packages = with pkgs; [];
   };
 
@@ -150,8 +152,9 @@ in
 	osu-lazer-bin
 	copyq
 	ayugram-desktop
+	vesktop
 	(discord.override {
-        withOpenASAR = true;
+#        withOpenASAR = true;
         withVencord = true;
         })
 	libnotify
@@ -163,6 +166,8 @@ in
 	killall
 	inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
 	inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+        temurin-bin-17
+	nordvpn
   ];
 
   ## PROGRAMS ##
@@ -177,10 +182,14 @@ in
       enable = true;
     };
   };
-  
+
+  environment.sessionVariables.XDG_DATA_DIRS = [ "/var/lib/flatpak/exports/share" ];  
+  services.flatpak.enable = true;  
   security.polkit.enable = true;
   services.udisks2.enable = true;
-
+  services.logind.settings.Login = {
+    HandlePowerKey = "ignore";
+  };
 
   system.stateVersion = "26.05";
 }

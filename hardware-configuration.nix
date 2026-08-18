@@ -38,14 +38,14 @@
 
   boot.supportedFilesystems = [ "ntfs" ];
 
-  fileSystems."/mnt/sda1" =
-    { device = "/dev/sda1";
+  fileSystems."/mnt/1" =
+    { device = "/dev/disk/by-uuid/C6E62E01E62DF1FB";
       fsType = "ntfs-3g"; 
       options = [ "rw" "uid=1000" "nofail"];
     };
 
-  fileSystems."/mnt/sda2" =
-    { device = "/dev/sda2";
+  fileSystems."/mnt/2" =
+    { device = "/dev/disk/by-uuid/2A683C46683C1355";
       fsType = "ntfs-3g"; 
       options = [ "rw" "uid=1000" "nofail"];
     };
