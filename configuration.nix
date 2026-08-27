@@ -106,7 +106,7 @@ in
 
   ## PACKAGES ##
   environment.systemPackages = with pkgs; [
-  	lsd
+	lsd
 	wget
 	fuse
 	bluez-tools
@@ -119,16 +119,16 @@ in
 	yt-dlp
 	pwvucontrol
 	git
-        kitty
-        firefox
+	kitty
+	firefox
 	eartag
 	audacity
 	vlc
 	p7zip
-        kdePackages.dolphin
+	kdePackages.dolphin
 	kdePackages.ark
 	rar
-        kdePackages.kio-admin
+  kdePackages.kio-admin
 	kdePackages.kio
 	kdePackages.kio-fuse
 	kdePackages.kio-extras
@@ -160,14 +160,14 @@ in
 	libnotify
 	tailscale
 	prismlauncher
-        fastfetch
-        vscodium
-        obs-studio
+  fastfetch
+	vscodium
 	killall
 	inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
 	inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
         temurin-bin-17
 	nordvpn
+	fetch
   ];
 
   ## PROGRAMS ##
@@ -181,6 +181,19 @@ in
     steam = {
       enable = true;
     };
+
+    nano = {
+      enable = true;
+      nanorc = "set tabsize 2";
+    };
+
+    obs-studio = {
+    	enable = true;
+    	enableVirtualCamera = true;
+    	plugins = with pkgs.obs-studio-plugins; [
+				droidcam-obs
+			];
+  	};
   };
 
   environment.sessionVariables.XDG_DATA_DIRS = [ "/var/lib/flatpak/exports/share" ];  
