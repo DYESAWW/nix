@@ -114,6 +114,7 @@ in
   ## PACKAGES ##
   environment.systemPackages = with pkgs; [
 	gcc
+	stow
 	lsd
 	wget
 	fuse
