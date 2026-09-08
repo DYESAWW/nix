@@ -20,16 +20,21 @@ in
   boot.loader.limine.enable = true;
   boot.loader.limine.secureBoot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.limine.extraEntries = ''
+  /Windows
+    protocol: efi
+    path: uuid(83028296-8054-469f-a2ab-36fa299c0c00):/EFI/Microsoft/Boot/bootmgfw.efi
+'';
   
   ## DISPLAY MANAGER ##
-  services.displayManager.sddm = {
-    enable = true;
-
-    wayland = {
-      enable = true;
-      #compositor = "kwin";
-    };
-  };
+#  services.displayManager.sddm = {
+#    enable = true;
+#
+#    wayland = {
+#      enable = true;
+#      #compositor = "kwin";
+#    };
+#  };
   
 
   ## KERNEL ##
@@ -54,7 +59,7 @@ in
   networking.firewall.enable = false;
 
   ## HOSTNAME ##
-  networking.hostName = "HaridPC";
+  networking.hostName = "DYESAW-PC";
 
   ## LOCALES ##
   time.timeZone = "Europe/Tallinn";
@@ -79,6 +84,8 @@ in
   ## FONTS ##
   fonts.packages = with pkgs; [
     noto-fonts
+		noto-fonts-cjk-sans
+		noto-fonts-cjk-serif
     nerd-fonts.fira-code
     nerd-fonts.inconsolata-go
     rubik
@@ -90,14 +97,14 @@ in
   
 
   ## USER ##
-  users.users."harid" = {
+  users.users."DYESAW" = {
     isNormalUser = true;
-    description = "Harid";
+    description = "DYESAW";
     extraGroups = [ "networkmanager" "wheel" "nordvpn" ];
     packages = with pkgs; [];
   };
 
-  nix.settings.trusted-users = [ "root" "harid"];  
+  nix.settings.trusted-users = [ "root" "DYESAW"];  
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -106,6 +113,7 @@ in
 
   ## PACKAGES ##
   environment.systemPackages = with pkgs; [
+	gcc
 	lsd
 	wget
 	fuse
@@ -118,14 +126,16 @@ in
 	wine64
 	yt-dlp
 	pwvucontrol
-	git
 	kitty
 	firefox
 	eartag
 	audacity
 	vlc
 	p7zip
+  ffmpeg
 	kdePackages.dolphin
+  kdePackages.kfilemetadata
+  kdePackages.baloo
 	kdePackages.ark
 	rar
   kdePackages.kio-admin
@@ -143,7 +153,6 @@ in
 	hyprpolkitagent
 	hyprpicker
 	hyprshutdown
-	grimblast
 	playerctl
 	gamescope
 	steam
@@ -154,9 +163,9 @@ in
 	ayugram-desktop
 	vesktop
 	(discord.override {
-#        withOpenASAR = true;
-        withVencord = true;
-        })
+#   withOpenASAR = true;
+    withVencord = true;
+  })
 	libnotify
 	tailscale
 	prismlauncher
@@ -165,9 +174,16 @@ in
 	killall
 	inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
 	inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
-        temurin-bin-17
+  temurin-bin-17
 	nordvpn
 	fetch
+  qbittorrent-enhanced
+	python3
+	python314
+	qdigidoc
+	thonny
+	obsidian
+	dualsensectl
   ];
 
   ## PROGRAMS ##
@@ -193,12 +209,54 @@ in
     	plugins = with pkgs.obs-studio-plugins; [
 				droidcam-obs
 			];
+		};
+		git = {
+  		enable = true;
+  		config = {
+    		init.defaultBranch = "main";
+				user.email = "haridula@proton.me";
+				user.name = "DYESAW";
+  		};
   	};
+
+    noctalia-greeter = {
+      enable = true;
+
+      # Optional configuration
+      greeter-args = "";
+      # Full declarative greeter.toml (overwritten on each activation).
+      # See examples/greeter.toml for every key (appearance.palette, output, …).
+      settings = {
+        cursor = {
+          theme = "Ellen-Joe";
+          size = 24;
+          path = "/etc/nixos/cursors";
+        };
+        keyboard = {
+          layout = "us";
+        };
+      };
+    };
+
+		kdeconnect = {
+			enable = true;
+		};
   };
+	
+	services.lact.enable = true;
+	services.syncthing = {
+		enable = true;
+		systemService = true;
+		user = "DYESAW";
+  	group = "users";
+  	dataDir = "/home/DYESAW/.local/share/syncthing";
+  	configDir = "/home/DYESAW/.config/syncthing";
+	};
 
   environment.sessionVariables.XDG_DATA_DIRS = [ "/var/lib/flatpak/exports/share" ];  
   services.flatpak.enable = true;  
   security.polkit.enable = true;
+	security.wrappers.pkexec.enable = pkgs.lib.mkForce true;
   services.udisks2.enable = true;
   services.logind.settings.Login = {
     HandlePowerKey = "ignore";

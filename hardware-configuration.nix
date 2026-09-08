@@ -12,6 +12,7 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
+  
 
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/07c5bab4-e5e9-476d-bd8c-3955b1ba3a0b";
@@ -54,4 +55,5 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.amdgpu.overdrive.enable = true;
 }
