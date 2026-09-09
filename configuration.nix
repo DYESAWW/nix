@@ -116,6 +116,7 @@ in
 	gcc
 	stow
 	lsd
+	busybox
 	wget
 	fuse
 	bluez-tools

@@ -30,7 +30,7 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, ... }: {
+  outputs = inputs@{ self, nixpkgs, hyprland, home-manager, ... }: {
     nixosConfigurations.DYESAW-PC = nixpkgs.lib.nixosSystem {
       specialArgs = { inherit inputs; };
       modules = [
