@@ -244,7 +244,7 @@ in
 		};
   };
 	
-	services.lact.enable = true;
+#	services.lact.enable = true;
 	services.syncthing = {
 		enable = true;
 		systemService = true;

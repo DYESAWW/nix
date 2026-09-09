@@ -28,11 +28,6 @@
       url = "github:noctalia-dev/noctalia-greeter";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    silentSDDM = {
-      url = "github:uiriansan/SilentSDDM";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs = inputs@{ self, nixpkgs, home-manager, ... }: {
@@ -42,7 +37,6 @@
 	{ nixpkgs.hostPlatform = "x86_64-linux"; }
         ./configuration.nix
         ./noctalia.nix
-        ./silentsddm.nix
         inputs.noctalia-greeter.nixosModules.default
         home-manager.nixosModules.home-manager
         {

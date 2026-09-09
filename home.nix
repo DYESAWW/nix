@@ -79,7 +79,7 @@ in
         sysconf = "sudo nano /etc/nixos/configuration.nix";
         flake = "sudo nano /etc/nixos/flake.nix";
         frebuild = "sudo nixos-rebuild switch --flake /etc/nixos#DYESAW-PC";
-        commit = "cd /etc/nixos && sudo git add -A && sudo git commit -m 'generic commit'";
+        commit = "cd /etc/nixos && sudo git add -A && sudo git commit -m 'generic commit' && sudo git push -u origin main";
       };
       
       initContent = "source /home/DYESAW/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh";
