@@ -3,6 +3,15 @@
 # to /etc/nixos/configuration.nix instead.
 { config, lib, pkgs, modulesPath, ... }:
 
+systemd.tmpfiles.rules = let
+  rocmEnv = pkgs.symlinkJoin {
+    name = "rocm-combined";
+    paths = with pkgs.rocmPackages; [ rocblas hipblas clr ];
+  };
+in [
+  "L+ /opt/rocm - - - - ${rocmEnv}"
+];
+
 {
   imports =
     [ (modulesPath + "/installer/scan/not-detected.nix")
@@ -37,8 +46,34 @@
       options = [ "fmask=0077" "dmask=0077" ];
     };
 
+  boot.supportedFilesystems = [ "ntfs" ];
+
+  fileSystems."/mnt/1" =
+    { device = "/dev/disk/by-uuid/C6E62E01E62DF1FB";
+      fsType = "ntfs-3g"; 
+      options = [ "rw" "uid=1000" "nofail"];
+    };
+
+  fileSystems."/mnt/2" =
+    { device = "/dev/disk/by-uuid/2A683C46683C1355";
+      fsType = "ntfs-3g"; 
+      options = [ "rw" "uid=1000" "nofail"];
+    };
+
   swapDevices = [ ];
 
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-}
+	### ENABLING ROCM ###
+
+	hardware.graphics = {
+  	enable = true;
+  	enable32Bit = true;
+	};
+	
+	environment.sessionVariables = {
+  	HSA_OVERRIDE_GFX_VERSION = "12.0.0";
+  	ROCR_VISIBLE_DEVICES = "0";
+	};
+
+	hardware.amdgpu.opencl.enable = true;
+
+  nixpkgs.hostPlatform = lib.mkDefau

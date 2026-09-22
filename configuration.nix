@@ -25,17 +25,61 @@ in
     protocol: efi
     path: uuid(83028296-8054-469f-a2ab-36fa299c0c00):/EFI/Microsoft/Boot/bootmgfw.efi
 '';
-  
+
   ## DISPLAY MANAGER ##
-#  services.displayManager.sddm = {
-#    enable = true;
-#
-#    wayland = {
-#      enable = true;
-#      #compositor = "kwin";
-#    };
-#  };
-  
+
+  services.displayManager.noctalia-greeter = {
+      enable = true;
+      greeter-args = "";
+      settings = {
+        cursor = {
+          theme = "Ellen-Joe";
+          size = 24;
+          path = "/etc/nixos/cursors";
+        };
+        keyboard = {
+          layout = "us";
+        };
+      };
+    };
+
+  ## DISK MOUNTS ##
+
+  boot.supportedFilesystems = [ "ntfs" ];
+
+  fileSystems."/mnt/1" =
+    { device = "/dev/disk/by-uuid/C6E62E01E62DF1FB";
+      fsType = "ntfs-3g"; 
+      options = [ "rw" "uid=1000" "nofail"];
+    };
+
+  fileSystems."/mnt/2" =
+    { device = "/dev/disk/by-uuid/2A683C46683C1355";
+      fsType = "ntfs-3g"; 
+      options = [ "rw" "uid=1000" "nofail"];
+    };
+
+  ## GRAPHICS ##
+
+	hardware.graphics = {
+  	enable = true;
+  	enable32Bit = true;
+	};
+
+	systemd.tmpfiles.rules = let
+	  rocmEnv = pkgs.symlinkJoin {
+	    name = "rocm-combined";
+	    paths = with pkgs.rocmPackages; [ rocblas hipblas clr ];
+	  };
+	in [
+	  "L+ /opt/rocm - - - - ${rocmEnv}"
+	];
+
+	environment.sessionVariables = {
+  	HSA_OVERRIDE_GFX_VERSION = "12.0.0";
+  	ROCR_VISIBLE_DEVICES = "0";
+	};
+  hardware.amdgpu.opencl.enable = true;
 
   ## KERNEL ##
 # boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -86,6 +130,7 @@ in
     noto-fonts
 		noto-fonts-cjk-sans
 		noto-fonts-cjk-serif
+		noto-fonts-color-emoji
     nerd-fonts.fira-code
     nerd-fonts.inconsolata-go
     rubik
@@ -100,20 +145,26 @@ in
   users.users."DYESAW" = {
     isNormalUser = true;
     description = "DYESAW";
-    extraGroups = [ "networkmanager" "wheel" "nordvpn" ];
+    extraGroups = [ "networkmanager" "wheel" "nordvpn" "video" "render" ];
     packages = with pkgs; [];
   };
 
   nix.settings.trusted-users = [ "root" "DYESAW"];  
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config = {
+    allowUnfree = true;
+    rocmSupport = true;
+    cudaSupport = false;
+  };
 
   environment.etc."xdg/menus/applications.menu".source = "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
 
   ## PACKAGES ##
+
   environment.systemPackages = with pkgs; [
 	gcc
+	file
 	stow
 	lsd
 	busybox
@@ -121,7 +172,6 @@ in
 	fuse
 	bluez-tools
 	bluez
-	ly
 	sbctl
 	protonup-qt
 	protontricks
@@ -135,10 +185,12 @@ in
 	vlc
 	p7zip
   ffmpeg
+  libreoffice-qt-fresh
 	kdePackages.dolphin
   kdePackages.kfilemetadata
   kdePackages.baloo
 	kdePackages.ark
+  kdePackages.okular
 	rar
   kdePackages.kio-admin
 	kdePackages.kio
@@ -154,8 +206,11 @@ in
 	hyprland-qt-support
 	hyprpolkitagent
 	hyprpicker
+  wayscriber
 	hyprshutdown
 	playerctl
+	rocmPackages.rocminfo
+  rocmPackages.rocm-smi
 	gamescope
 	steam
 	adwsteamgtk
@@ -186,6 +241,20 @@ in
 	thonny
 	obsidian
 	dualsensectl
+  ];
+
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    stdenv.cc.cc.lib
+    zlib
+    libGL
+    glib
+    rocmPackages.clr
+    rocmPackages.rocblas
+    rocmPackages.hipblas
+    rocmPackages.rccl
+    rocmPackages.miopen
+    numactl
   ];
 
   ## PROGRAMS ##
@@ -220,25 +289,6 @@ in
 				user.name = "DYESAW";
   		};
   	};
-
-    noctalia-greeter = {
-      enable = true;
-
-      # Optional configuration
-      greeter-args = "";
-      # Full declarative greeter.toml (overwritten on each activation).
-      # See examples/greeter.toml for every key (appearance.palette, output, …).
-      settings = {
-        cursor = {
-          theme = "Ellen-Joe";
-          size = 24;
-          path = "/etc/nixos/cursors";
-        };
-        keyboard = {
-          layout = "us";
-        };
-      };
-    };
 
 		kdeconnect = {
 			enable = true;
