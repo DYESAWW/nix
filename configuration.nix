@@ -93,7 +93,7 @@ in
   networking.networkmanager.enable = true;
   networking.networkmanager.dns = "systemd-resolved";
   services.resolved.enable = true;
-  networking.wireless.enable = true;
+  #networking.wireless.enable = true;
   hardware.bluetooth.enable = true;
   services.power-profiles-daemon.enable = true;
   services.upower.enable = true;
@@ -101,6 +101,44 @@ in
   services.tailscale.enable = true;
   services.nordvpn.enable = true;
   networking.firewall.enable = false;
+
+
+## password encryption for wifi
+sops.defaultSopsFile = ./secrets/eduroam.yaml;
+sops.age.keyFile = "/var/lib/sops-nix/key.txt";
+sops.secrets.eduroam-password = {};
+
+networking.networkmanager.ensureProfiles.profiles = {
+  eduroam = {
+    connection = {
+      id = "eduroam";
+      type = "wifi";
+      autoconnect = true;
+      autoconnect-retries = -1;
+    };
+    wifi = {
+      ssid = "eduroam";
+      mode = "infrastructure";
+      powersave = 2;
+    };
+    wifi-security = {
+      key-mgmt = "wpa-eap";
+    };
+    "802-1x" = {
+      eap = "peap";
+      identity = "razdolski@ut.ee";
+      phase2-auth = "mschapv2";
+      ca-cert = "/etc/nixos/eduroam-ca.pem";
+      auth-timeout = 60;
+      password-raw = "@${config.sops.secrets.eduroam-password.path}";
+    };
+    ipv4 = {
+      method = "auto";
+      dhcp-timeout = 60;
+    };
+    ipv6.method = "auto";
+  };
+};
 
   ## HOSTNAME ##
   networking.hostName = "DYESAW-PC";
@@ -134,6 +172,7 @@ in
     nerd-fonts.fira-code
     nerd-fonts.inconsolata-go
     rubik
+		corefonts
   ];
 
   ## ZSH SETUP ##
@@ -185,7 +224,7 @@ in
 	vlc
 	p7zip
   ffmpeg
-  libreoffice-qt-fresh
+  libreoffice-qt
 	kdePackages.dolphin
   kdePackages.kfilemetadata
   kdePackages.baloo

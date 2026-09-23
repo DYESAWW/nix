@@ -10,38 +10,43 @@
     ];
   };
 
-  inputs = {
-    nixpkgs-python310.url = "github:NixOS/nixpkgs/b122cf0";
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+inputs = {
+  nixpkgs-python310.url = "github:NixOS/nixpkgs/b122cf0";
+  nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    spicetify-nix = {
-      url = "github:Gerg-L/spicetify-nix";
-    };
-
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    noctalia = {
-      url = "github:noctalia-dev/noctalia/cachix";
-    };
-
-    noctalia-greeter = {
-      url = "github:noctalia-dev/noctalia-greeter";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    aagl = {
-      url = "github:ezKEa/aagl-gtk-on-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+  spicetify-nix = {
+    url = "github:Gerg-L/spicetify-nix";
   };
+
+  zen-browser = {
+    url = "github:0xc000022070/zen-browser-flake";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+
+  home-manager = {
+    url = "github:nix-community/home-manager";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+
+  noctalia = {
+    url = "github:noctalia-dev/noctalia/cachix";
+  };
+
+  noctalia-greeter = {
+    url = "github:noctalia-dev/noctalia-greeter";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+
+  aagl = {
+    url = "github:ezKEa/aagl-gtk-on-nix";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+
+  sops-nix = {
+    url = "github:Mic92/sops-nix";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+};
 
   outputs = inputs@{ self, nixpkgs, home-manager, ... }: {
     nixosConfigurations.DYESAW-PC = nixpkgs.lib.nixosSystem {
@@ -51,6 +56,7 @@
         ./configuration.nix
         ./noctalia.nix
         inputs.noctalia-greeter.nixosModules.default
+        inputs.sops-nix.nixosModules.sops
         inputs.aagl.nixosModules.default
         home-manager.nixosModules.home-manager
         {

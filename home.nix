@@ -121,7 +121,8 @@ in
       wayland = true;
       enabledExtensions = with spicePkgs.extensions; [
         copyLyrics
-	      betterGenres
+#				betterGenres
+				spicyLyrics 
         playNext
         fullAlbumDate
         hidePodcasts
