@@ -93,7 +93,7 @@ in
   networking.networkmanager.enable = true;
   networking.networkmanager.dns = "systemd-resolved";
   services.resolved.enable = true;
-  #networking.wireless.enable = true;
+  #`networking.wireless.enable` = true;
   hardware.bluetooth.enable = true;
   services.power-profiles-daemon.enable = true;
   services.upower.enable = true;
