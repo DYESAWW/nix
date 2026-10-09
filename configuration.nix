@@ -61,9 +61,14 @@ in
 
   ## GRAPHICS ##
 
-	hardware.graphics = {
-  	enable = true;
-  	enable32Bit = true;
+	hardware = {
+    amdgpu = {
+      overdrive.enable = true;
+    };
+    graphics = {
+  	  enable = true;
+  	  enable32Bit = true;
+    };
 	};
 
 	systemd.tmpfiles.rules = let
@@ -93,7 +98,7 @@ in
   networking.networkmanager.enable = true;
   networking.networkmanager.dns = "systemd-resolved";
   services.resolved.enable = true;
-  #`networking.wireless.enable` = true;
+  #networking.wireless.enable = true;
   hardware.bluetooth.enable = true;
   services.power-profiles-daemon.enable = true;
   services.upower.enable = true;
@@ -280,6 +285,7 @@ networking.networkmanager.ensureProfiles.profiles = {
 	thonny
 	obsidian
 	dualsensectl
+  proton-authenticator
   ];
 
   programs.nix-ld.enable = true;
@@ -334,7 +340,7 @@ networking.networkmanager.ensureProfiles.profiles = {
 		};
   };
 	
-#	services.lact.enable = true;
+  services.lact.enable = true;
 	services.syncthing = {
 		enable = true;
 		systemService = true;

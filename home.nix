@@ -49,6 +49,13 @@ in
   programs = {
     zsh = {
       enable = true;
+
+      autosuggestion = {
+        enable = true;
+        strategy = [ "history" ];
+      };
+      syntaxHighlighting.enable = true;
+
       shellAliases = {
         ls = "lsd -a";
         try = "nix-shell -p";
@@ -61,82 +68,65 @@ in
         frebuild = "sudo nixos-rebuild switch --flake /etc/nixos#DYESAW-PC";
         commit = "cd /etc/nixos && sudo git add -A && sudo git commit -m 'generic commit' && sudo git push -u origin main";
       };
-      
-      initContent = "source /home/DYESAW/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh";
+
+      initContent = ''
+        source ${config.home.homeDirectory}/.zsh/catppuccin_mocha-zsh-syntax-highlighting.zsh
+        ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+      '';
 
       oh-my-zsh = {
         enable = true;
         plugins = [ "git" ];
       };
 
-      plugins = [
-        {
-          name = "zsh-autocomplete";
-          src = pkgs.fetchFromGitHub {
-          owner = "marlonrichert";
-          repo = "zsh-autocomplete";
-          rev = "23.07.13";
-          sha256 = "sha256-/6V6IHwB5p0GT1u5SAiUa20LjFDSrMo731jFBq/bnpw=";
-          };
-        }
-
-        {
-          name = "zsh-syntax-highlighting";
-          src = pkgs.fetchFromGitHub {
-          owner = "zsh-users";
-          repo = "zsh-syntax-highlighting";
-          rev = "0.8.0";
-          sha256 = "sha256-iJdWopZwHpSyYl5/FQXEW7gl/SrKaYDEtTH9cGP7iPo=";
-          };
-        }
-
-        {
-          name = "zsh-autosuggestions";
-          src = pkgs.fetchFromGitHub {
-          owner = "zsh-users";
-          repo = "zsh-autosuggestions";
-          rev = "v0.7.0";
-          sha256 = "sha256-KLUYpUu4DHRumQZ3w59m9aTW6TBKMCXl2UcKi4uMd7w=";
-          };
-        }
-      ];
-    };
-
-    atuin = {
-      enable = true;
-      enableZshIntegration = true;
-    };
-
-    oh-my-posh = {
-      enable = true;
-      useTheme = "catppuccin_mocha";
-    };
-
-    git = {
-      enable = true;
-    };
-
-    spicetify = {
-      enable = true;
-      wayland = true;
-      enabledExtensions = with spicePkgs.extensions; [
-        copyLyrics
-#				betterGenres
-				spicyLyrics 
-        playNext
-        fullAlbumDate
-        hidePodcasts
-        shuffle
-	      beautifulLyrics
-        copyToClipboard
-	      volumePercentage
-      ];
-
-      theme = {
-        name = "Lucid";
-        src = ./themes/Lucid;
+        plugins = [
+          {
+            name = "zsh-autocomplete";
+            src = pkgs.fetchFromGitHub {
+            owner = "marlonrichert";
+            repo = "zsh-autocomplete";
+            rev = "23.07.13";
+            sha256 = "sha256-/6V6IHwB5p0GT1u5SAiUa20LjFDSrMo731jFBq/bnpw=";
+            };
+          }
+        ];
       };
-    };
+
+      atuin = {
+        enable = true;
+        enableZshIntegration = true;
+      };
+
+      oh-my-posh = {
+        enable = true;
+        useTheme = "catppuccin_mocha";
+      };
+
+      git = {
+        enable = true;
+      };
+
+      spicetify = {
+        enable = true;
+        wayland = true;
+        enabledExtensions = with spicePkgs.extensions; [
+          copyLyrics
+#         betterGenres
+          spicyLyrics 
+          playNext
+          fullAlbumDate
+          hidePodcasts
+          shuffle
+          beautifulLyrics
+          copyToClipboard
+          volumePercentage
+        ];
+
+        theme = {
+          name = "Lucid";
+          src = ./themes/Lucid;
+        };
+      };
   };
 
   home.file = {
