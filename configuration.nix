@@ -71,6 +71,8 @@ in
     };
 	};
 
+  boot.kernelParams = [ "amdgpu.vm_update_mode=3" ];
+
 	systemd.tmpfiles.rules = let
 	  rocmEnv = pkgs.symlinkJoin {
 	    name = "rocm-combined";
@@ -106,6 +108,10 @@ in
   services.tailscale.enable = true;
   services.nordvpn.enable = true;
   networking.firewall.enable = false;
+
+  networking.networkmanager.plugins = with pkgs; [
+    networkmanager-openvpn
+  ];
 
 
 ## password encryption for wifi
@@ -286,7 +292,12 @@ networking.networkmanager.ensureProfiles.profiles = {
 	obsidian
 	dualsensectl
   proton-authenticator
+  python312
+  nodejs
+  eduvpn-client
+  opencode
   ];
+  documentation.doc.enable = false;
 
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [
@@ -350,7 +361,18 @@ networking.networkmanager.ensureProfiles.profiles = {
   	configDir = "/home/DYESAW/.config/syncthing";
 	};
 
-  environment.sessionVariables.XDG_DATA_DIRS = [ "/var/lib/flatpak/exports/share" ];  
+  services.ollama = {
+    enable = true;
+    package = pkgs.ollama-rocm;
+    environmentVariables = {
+      OLLAMA_CONTEXT_LENGTH = "16384";
+      OLLAMA_FLASH_ATTENTION = "1";
+      OLLAMA_KV_CACHE_TYPE = "q8_0";
+    };
+  };
+
+  environment.sessionVariables.XDG_DATA_DIRS = [ "/var/lib/flatpak/exports/share" ];
+  services.gnome.gnome-keyring.enable = true;
   services.flatpak.enable = true;  
   security.polkit.enable = true;
 	security.wrappers.pkexec.enable = pkgs.lib.mkForce true;
