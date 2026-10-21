@@ -60,7 +60,7 @@
     };
 	};
 
-  boot.kernelParams = [ "amdgpu.vm_update_mode=3" ];
+  boot.kernelParams = [ "amdgpu.vm_update_mode=3" "usbcore.autosuspend=-1" ];
 
 	systemd.tmpfiles.rules = let
 	  rocmEnv = pkgs.symlinkJoin {
@@ -79,17 +79,27 @@
 
   ## KERNEL ##
 # boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.kernelPackages = pkgs.linuxPackages_zen;
+#   boot.kernelPackages = pkgs.linuxPackages_zen;
  
-  boot.extraModulePackages = [ config.boot.kernelPackages.v4l2loopback ];
-  boot.extraModprobeConfig = '' options v4l2loopback devices=1 video_nr=10 card_label="VirtualCam" exclusive_caps=1 '';
+  boot.kernelPackages = pkgs.linuxPackages_zen.extend (final: prev: {
+    v4l2loopback = prev.v4l2loopback.overrideAttrs (old: {
+      postInstall = (old.postInstall or "") + ''
+        rm -f $out/lib/modules/*/modules.*
+      '';
+    });
+  });
+  boot.extraModprobeConfig = ''
+  options v4l2loopback devices=1 video_nr=10 card_label="VirtualCam" exclusive_caps=1
+  options cfg80211 ieee80211_regdom=EE
+  options rtw89_core disable_ps_mode=Y
+'';
   boot.kernelModules = [ "v4l2loopback" ];
 
-  ## NETWORKING ##
+ ## NETWORKING ##
   networking.networkmanager.enable = true;
   networking.networkmanager.dns = "systemd-resolved";
+  networking.networkmanager.wifi.powersave = false;
   services.resolved.enable = true;
-  #networking.wireless.enable = true;
   hardware.bluetooth.enable = true;
   services.power-profiles-daemon.enable = true;
   services.upower.enable = true;
@@ -102,43 +112,73 @@
     networkmanager-openvpn
   ];
 
+  hardware.wirelessRegulatoryDatabase = true;
 
-## password encryption for wifi
-sops.defaultSopsFile = ./secrets/eduroam.yaml;
-sops.age.keyFile = "/var/lib/sops-nix/key.txt";
-sops.secrets.eduroam-password = {};
+  ## password encryption for wifi
+  sops.defaultSopsFile = ./secrets/eduroam.yaml;
+  sops.age.keyFile = "/var/lib/sops-nix/key.txt";
+  sops.secrets.eduroam-password = {};
+  sops.templates."eduroam.env".content = ''
+    EDUROAM_PASSWORD=${config.sops.placeholder.eduroam-password}
+  '';
 
-networking.networkmanager.ensureProfiles.profiles = {
-  eduroam = {
-    connection = {
-      id = "eduroam";
-      type = "wifi";
-      autoconnect = true;
-      autoconnect-retries = -1;
+  networking.networkmanager.ensureProfiles.environmentFiles =
+    [ config.sops.templates."eduroam.env".path ];
+
+  networking.networkmanager.ensureProfiles.profiles = {
+    eduroam = {
+      connection = {
+        id = "eduroam";
+        type = "wifi";
+        autoconnect = true;
+        autoconnect-retries = -1;
+      };
+      wifi = {
+        ssid = "eduroam";
+        mode = "infrastructure";
+        powersave = 2;
+        band = "a";
+      };
+      wifi-security = {
+        key-mgmt = "wpa-eap";
+      };
+      "802-1x" = {
+        eap = "peap";
+        identity = "razdolski@ut.ee";
+        phase2-auth = "mschapv2";
+        ca-cert = "/etc/nixos/eduroam-ca.pem";
+        domain-suffix-match = "ut.ee";
+        auth-timeout = 60;
+        password = "$EDUROAM_PASSWORD";
+      };
+      ipv4 = {
+        method = "auto";
+        dhcp-timeout = 60;
+      };
+      ipv6.method = "auto";
     };
-    wifi = {
-      ssid = "eduroam";
-      mode = "infrastructure";
-      powersave = 2;
-    };
-    wifi-security = {
-      key-mgmt = "wpa-eap";
-    };
-    "802-1x" = {
-      eap = "peap";
-      identity = "razdolski@ut.ee";
-      phase2-auth = "mschapv2";
-      ca-cert = "/etc/nixos/eduroam-ca.pem";
-      auth-timeout = 60;
-      password-raw = "@${config.sops.secrets.eduroam-password.path}";
-    };
-    ipv4 = {
-      method = "auto";
-      dhcp-timeout = 60;
-    };
-    ipv6.method = "auto";
   };
-};
+
+
+  systemd.services.wifi-watchdog = {
+    description = "Reconnect wifi if the link stalls";
+    path = with pkgs; [ iputils networkmanager iproute2 gawk ];
+    serviceConfig.Type = "oneshot";
+    script = ''
+      gw=$(ip route show default | awk '/default/ {print $3; exit}')
+      [ -z "$gw" ] && exit 0
+      if ! ping -c2 -W2 "$gw" >/dev/null 2>&1 && ! ping -c2 -W2 1.1.1.1 >/dev/null 2>&1; then
+        nmcli connection up eduroam
+      fi
+    '';
+  };
+  systemd.timers.wifi-watchdog = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnBootSec = "2min";
+      OnUnitActiveSec = "30s";
+    };
+  };
 
   ## HOSTNAME ##
   networking.hostName = "DYESAW-PC";
@@ -184,7 +224,7 @@ networking.networkmanager.ensureProfiles.profiles = {
   users.users."DYESAW" = {
     isNormalUser = true;
     description = "DYESAW";
-    extraGroups = [ "networkmanager" "wheel" "nordvpn" "video" "render" ];
+    extraGroups = [ "networkmanager" "wheel" "video" "render" ];
     packages = with pkgs; [];
   };
 
@@ -220,7 +260,7 @@ networking.networkmanager.ensureProfiles.profiles = {
 	kitty
 	firefox
 	eartag
-	audacity
+	#audacity
 	vlc
 	p7zip
   ffmpeg
@@ -271,7 +311,6 @@ networking.networkmanager.ensureProfiles.profiles = {
 	inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
 	inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
   temurin-bin-17
-	nordvpn
 	fetch
   qbittorrent-enhanced
 	python3
