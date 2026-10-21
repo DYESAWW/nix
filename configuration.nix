@@ -159,27 +159,6 @@
     };
   };
 
-
-  systemd.services.wifi-watchdog = {
-    description = "Reconnect wifi if the link stalls";
-    path = with pkgs; [ iputils networkmanager iproute2 gawk ];
-    serviceConfig.Type = "oneshot";
-    script = ''
-      gw=$(ip route show default | awk '/default/ {print $3; exit}')
-      [ -z "$gw" ] && exit 0
-      if ! ping -c2 -W2 "$gw" >/dev/null 2>&1 && ! ping -c2 -W2 1.1.1.1 >/dev/null 2>&1; then
-        nmcli connection up eduroam
-      fi
-    '';
-  };
-  systemd.timers.wifi-watchdog = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnBootSec = "2min";
-      OnUnitActiveSec = "30s";
-    };
-  };
-
   ## HOSTNAME ##
   networking.hostName = "DYESAW-PC";
 
