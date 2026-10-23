@@ -60,7 +60,6 @@ inputs = {
         inputs.aagl.nixosModules.default
         home-manager.nixosModules.home-manager
         {
-          # aagl: Cachix + launcher(s)
           nix.settings = inputs.aagl.nixConfig;
           # programs.anime-game-launcher.enable = true;
           # programs.anime-games-launcher.enable = true;

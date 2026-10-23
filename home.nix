@@ -121,6 +121,7 @@ in
           beautifulLyrics
           copyToClipboard
           volumePercentage
+          songStats
         ];
 
         theme = {

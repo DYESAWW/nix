@@ -203,7 +203,7 @@
   users.users."DYESAW" = {
     isNormalUser = true;
     description = "DYESAW";
-    extraGroups = [ "networkmanager" "wheel" "video" "render" ];
+    extraGroups = [ "networkmanager" "wheel" "video" "render" "librepods" ];
     packages = with pkgs; [];
   };
 
@@ -219,6 +219,19 @@
   environment.etc."xdg/menus/applications.menu".source = "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
 
   ## PACKAGES ##
+  nixpkgs.overlays = [
+  (final: prev: {
+      librepods = prev.symlinkJoin {
+        name = "librepods-wrapped";
+        paths = [ prev.librepods ];
+        nativeBuildInputs = [ prev.makeBinaryWrapper ];
+        postBuild = ''
+          wrapProgram $out/bin/librepods --unset QT_STYLE_OVERRIDE
+        '';
+        meta.mainProgram = "librepods";
+      };
+    })
+  ];
 
   environment.systemPackages = with pkgs; [
 	gcc
@@ -258,6 +271,7 @@
 	kdePackages.gwenview
 	kdePackages.qtsvg
 	kdePackages.qtstyleplugin-kvantum
+  pkgs.qt6Packages.qtstyleplugin-kvantum
 	libsForQt5.qtstyleplugin-kvantum
 	libsForQt5.qt5ct
 	kdePackages.qt6ct
@@ -356,6 +370,10 @@
 		kdeconnect = {
 			enable = true;
 		};
+
+    librepods = {
+      enable = true;
+    };
   };
 	
   services.lact.enable = true;
