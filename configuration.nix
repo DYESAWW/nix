@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, lib, inputs, ... }:
 {
   imports =
     [
@@ -6,14 +6,31 @@
     ];
 
   ## BOOTLOADER ##
-  boot.loader.limine.enable = true;
-  boot.loader.limine.secureBoot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.limine.extraEntries = ''
-  /Windows
-    protocol: efi
-    path: uuid(83028296-8054-469f-a2ab-36fa299c0c00):/EFI/Microsoft/Boot/bootmgfw.efi
-'';
+  boot = {
+    loader = {
+      limine = {
+        enable = true;
+        secureBoot.enable = true;
+        extraEntries = ''
+          /Windows
+            protocol: efi
+            path: uuid(83028296-8054-469f-a2ab-36fa299c0c00):/EFI/Microsoft/Boot/bootmgfw.efi
+        '';
+        style = {
+          graphicalTerminal = {
+            palette = "1e1e2e;f38ba8;a6e3a1;f9e2af;89b4fa;f5c2e7;94e2d5;cdd6f4";
+            brightPalette = "585b70;f38ba8;a6e3a1;f9e2af;89b4fa;f5c2e7;94e2d5;cdd6f4";
+            background = "1e1e2e";
+            foreground = "cdd6f4";
+            brightBackground = "585b70";
+            brightForeground = "cdd6f4";
+          };
+        };
+      };
+
+      efi.canTouchEfiVariables = true;
+    };
+  };
 
   ## DISPLAY MANAGER ##
 
@@ -33,7 +50,8 @@
     };
 
   ## DISK MOUNTS ##
-
+  services.fstrim.enable = true;
+  zramSwap.enable = true;
   boot.supportedFilesystems = [ "ntfs" ];
 
   fileSystems."/mnt/1" =
@@ -60,6 +78,11 @@
     };
 	};
 
+  environment.sessionVariables = {
+    PROTON_FSR4_UPGRADE = "1";
+    ENABLE_LAYER_MESA_ANTI_LAG = "1";
+  };
+
   boot.kernelParams = [ "amdgpu.vm_update_mode=3" "usbcore.autosuspend=-1" ];
 
 	systemd.tmpfiles.rules = let
@@ -79,8 +102,8 @@
 
   ## KERNEL ##
 # boot.kernelPackages = pkgs.linuxPackages_latest;
-#   boot.kernelPackages = pkgs.linuxPackages_zen;
- 
+# boot.kernelPackages = pkgs.linuxPackages_zen;
+
   boot.kernelPackages = pkgs.linuxPackages_zen.extend (final: prev: {
     v4l2loopback = prev.v4l2loopback.overrideAttrs (old: {
       postInstall = (old.postInstall or "") + ''
@@ -88,6 +111,8 @@
       '';
     });
   });
+  powerManagement.cpuFreqGovernor = "performance";
+
   boot.extraModprobeConfig = ''
   options v4l2loopback devices=1 video_nr=10 card_label="VirtualCam" exclusive_caps=1
   options cfg80211 ieee80211_regdom=EE
@@ -146,7 +171,7 @@
         eap = "peap";
         identity = "razdolski@ut.ee";
         phase2-auth = "mschapv2";
-        ca-cert = "/etc/nixos/eduroam-ca.pem";
+        ca-cert = "/etc/ssl/certs/ca-certificates.crt";
         domain-suffix-match = "ut.ee";
         auth-timeout = 60;
         password = "$EDUROAM_PASSWORD";
@@ -192,6 +217,7 @@
     nerd-fonts.inconsolata-go
     rubik
 		corefonts
+    (pkgs.google-fonts.override { fonts = [ "HostGrotesk" ]; })
   ];
 
   ## ZSH SETUP ##
@@ -216,33 +242,21 @@
     cudaSupport = false;
   };
 
+  nix.settings.auto-optimise-store = true;
+  nix.gc = { automatic = true; dates = "weekly"; options = "--delete-older-than 7d"; };
+
   environment.etc."xdg/menus/applications.menu".source = "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
 
   ## PACKAGES ##
-  nixpkgs.overlays = [
-  (final: prev: {
-      librepods = prev.symlinkJoin {
-        name = "librepods-wrapped";
-        paths = [ prev.librepods ];
-        nativeBuildInputs = [ prev.makeBinaryWrapper ];
-        postBuild = ''
-          wrapProgram $out/bin/librepods --unset QT_STYLE_OVERRIDE
-        '';
-        meta.mainProgram = "librepods";
-      };
-    })
-  ];
-
   environment.systemPackages = with pkgs; [
 	gcc
 	file
 	stow
+  btop
 	lsd
-	busybox
 	wget
 	fuse
 	bluez-tools
-	bluez
 	sbctl
 	protonup-qt
 	protontricks
@@ -284,7 +298,6 @@
 	rocmPackages.rocminfo
   rocmPackages.rocm-smi
 	gamescope
-	steam
 	adwsteamgtk
 	steam-run
 	osu-lazer-bin
@@ -296,7 +309,6 @@
     withVencord = true;
   })
 	libnotify
-	tailscale
 	prismlauncher
   fastfetch
 	vscodium
@@ -317,6 +329,7 @@
   nodejs
   eduvpn-client
   opencode
+  mangohud
   ];
   documentation.doc.enable = false;
 
@@ -346,6 +359,10 @@
       enable = true;
     };
 
+    gamemode = {
+      enable = true;
+    };
+
     nano = {
       enable = true;
       nanorc = "set tabsize 2";
@@ -370,10 +387,6 @@
 		kdeconnect = {
 			enable = true;
 		};
-
-    librepods = {
-      enable = true;
-    };
   };
 	
   services.lact.enable = true;
