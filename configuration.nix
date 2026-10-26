@@ -33,7 +33,7 @@
   };
 
   ## DISPLAY MANAGER ##
-
+/*
   services.displayManager.noctalia-greeter = {
       enable = true;
       greeter-args = "";
@@ -48,6 +48,21 @@
         };
       };
     };
+*/
+
+  services.displayManager.dux-greeter = {
+    enable = true;
+    compositor = {
+      name = "hyprland";
+      customConfig = ''
+        hl.env("XCURSOR_SIZE", "24")
+        hl.env("XCURSOR_THEME", "Ellen-Joe")
+        hl.env("HYPRCURSOR_SIZE", "24")
+        hl.env("HYPRCURSOR_THEME", "Ellen-Joe")
+      '';
+    };
+    configHome = "/home/DYESAW";
+  };
 
   ## DISK MOUNTS ##
   services.fstrim.enable = true;
@@ -99,6 +114,7 @@
   	ROCR_VISIBLE_DEVICES = "0";
 	};
   hardware.amdgpu.opencl.enable = true;
+  programs.gpu-screen-recorder.enable = true;
 
   ## KERNEL ##
 # boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -218,6 +234,11 @@
     rubik
 		corefonts
     (pkgs.google-fonts.override { fonts = [ "HostGrotesk" ]; })
+    inter
+    roboto
+    roboto-slab
+    roboto-flex
+    roboto-serif
   ];
 
   ## ZSH SETUP ##
@@ -229,7 +250,7 @@
   users.users."DYESAW" = {
     isNormalUser = true;
     description = "DYESAW";
-    extraGroups = [ "networkmanager" "wheel" "video" "render" "librepods" ];
+    extraGroups = [ "networkmanager" "wheel" "video" "render" ];
     packages = with pkgs; [];
   };
 
@@ -314,7 +335,7 @@
 	vscodium
 	killall
 	inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
-	inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+# inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
   temurin-bin-17
 	fetch
   qbittorrent-enhanced
@@ -330,6 +351,12 @@
   eduvpn-client
   opencode
   mangohud
+  grimblast
+  amdgpu_top
+  wayscriber
+  grim
+  slurp
+  wl-clipboard
   ];
   documentation.doc.enable = false;
 
@@ -353,6 +380,14 @@
       enable = true;
       withUWSM = true;
       xwayland.enable = true;
+    };
+
+    dux-shell = {
+      enable = true;
+      systemd = {
+        enable = true;
+        restartIfChanged = true;
+      };
     };
 
     steam = {
@@ -403,14 +438,14 @@
     enable = true;
     package = pkgs.ollama-rocm;
     environmentVariables = {
-      OLLAMA_CONTEXT_LENGTH = "16384";
+      OLLAMA_CONTEXT_LENGTH = "32768";
       OLLAMA_FLASH_ATTENTION = "1";
       OLLAMA_KV_CACHE_TYPE = "q8_0";
     };
   };
 
   environment.sessionVariables.XDG_DATA_DIRS = [ "/var/lib/flatpak/exports/share" ];
-  services.gnome.gnome-keyring.enable = true;
+  #services.gnome.gnome-keyring.enable = true;
   services.flatpak.enable = true;  
   security.polkit.enable = true;
 	security.wrappers.pkexec.enable = pkgs.lib.mkForce true;

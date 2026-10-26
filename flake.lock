@@ -79,6 +79,21 @@
         "type": "github"
       }
     },
+    "nix-monitor": {
+      "locked": {
+        "lastModified": 1771568669,
+        "narHash": "sha256-lTbQ13lQ3ZPNkdnFmxAMGf1Gjx//80lDDlcJR8msREI=",
+        "owner": "antonjah",
+        "repo": "nix-monitor",
+        "rev": "ef3db9d5a525ddf41355e8c456b40d56480a6626",
+        "type": "github"
+      },
+      "original": {
+        "owner": "antonjah",
+        "repo": "nix-monitor",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1792773339,
@@ -180,6 +195,7 @@
       "inputs": {
         "aagl": "aagl",
         "home-manager": "home-manager",
+        "nix-monitor": "nix-monitor",
         "nixpkgs": "nixpkgs",
         "nixpkgs-python310": "nixpkgs-python310",
         "noctalia": "noctalia",

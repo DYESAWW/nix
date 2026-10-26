@@ -46,6 +46,10 @@ inputs = {
     url = "github:Mic92/sops-nix";
     inputs.nixpkgs.follows = "nixpkgs";
   };
+
+  nix-monitor = {
+    url = "github:antonjah/nix-monitor";
+  };
 };
 
   outputs = inputs@{ self, nixpkgs, home-manager, ... }: {
@@ -55,7 +59,7 @@ inputs = {
         { nixpkgs.hostPlatform = "x86_64-linux"; }
         ./configuration.nix
         ./noctalia.nix
-        inputs.noctalia-greeter.nixosModules.default
+        #inputs.noctalia-greeter.nixosModules.default
         inputs.sops-nix.nixosModules.sops
         inputs.aagl.nixosModules.default
         home-manager.nixosModules.home-manager
@@ -75,8 +79,16 @@ inputs = {
           home-manager.users.DYESAW = {
             imports = [
               inputs.spicetify-nix.homeManagerModules.spicetify
+              inputs.nix-monitor.homeManagerModules.default
               ./home.nix
             ];
+            programs.nix-monitor = {
+              enable = true;
+              rebuildCommand = [
+                "bash" "-c"
+                "sudo nixos-rebuild switch --flake /etc/nixos#DYESAW-PC 2>&1"
+              ];
+            };
           };
         }
       ];
