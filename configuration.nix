@@ -357,6 +357,8 @@
   grim
   slurp
   wl-clipboard
+  codex
+  bubblewrap
   ];
   documentation.doc.enable = false;
 
@@ -438,7 +440,7 @@
     enable = true;
     package = pkgs.ollama-rocm;
     environmentVariables = {
-      OLLAMA_CONTEXT_LENGTH = "32768";
+      OLLAMA_CONTEXT_LENGTH = "16384";
       OLLAMA_FLASH_ATTENTION = "1";
       OLLAMA_KV_CACHE_TYPE = "q8_0";
     };

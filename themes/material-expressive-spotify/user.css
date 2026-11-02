@@ -1,0 +1,1849 @@
+/* =====================================================================
+   Material 3 Expressive · Catppuccin Mocha (Mauve)
+   Spicetify theme: user.css
+
+   Needs theme.js next to it (wavy seek bar, like state, shelf tagging,
+   play-on-artwork alignment). Without theme.js the theme still works; the
+   seek bar falls back to a plain purple pill and the carousel surfaces
+   rely on Spotify's own class names.
+   ===================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:FILL,GRAD,opsz,wght@0..1,-25..200,20..48,300..700&icon_names=add,chevron_left,chevron_right,close,devices,download,explore,favorite,fullscreen,fullscreen_exit,group,home,library_music,lyrics,more_horiz,notifications,pause,picture_in_picture_alt,play_arrow,playlist_add,queue_music,repeat,repeat_one,right_panel_open,search,shuffle,skip_next,skip_previous,volume_off,volume_up&display=block");
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400..800&display=swap");
+
+/* ---------------------------------------------------------------------
+   1. Tokens
+   --------------------------------------------------------------------- */
+:root {
+  /* Catppuccin Mocha */
+  --me3-crust: #11111b;
+  --me3-mantle: #181825;
+  --me3-base: #1e1e2e;
+  --me3-surface: #313244;      /* surface0 */
+  --me3-surface-1: #45475a;    /* surface1 */
+  --me3-surface-2: #585b70;    /* surface2 */
+  --me3-text: #cdd6f4;
+  --me3-subtext: #a6adc8;
+  --me3-mauve: #cba6f7;
+  --me3-lavender: #b4befe;
+  --me3-pink: #f5c2e7;
+  --me3-red: #f38ba8;
+  --me3-mauve-container: #55486c;     /* mauve over mantle: M3 "primary container" */
+  --me3-on-mauve-container: #eadcfd;
+
+  /* M3 shape scale */
+  --me3-radius-small: 12px;
+  --me3-radius-medium: 18px;
+  --me3-radius-large: 28px;
+  --me3-radius-pill: 999px;
+
+  /* M3 Expressive motion */
+  --me3-ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+  --me3-ease-std: cubic-bezier(.2, 0, 0, 1);
+
+  /* Player controls (section 7c): square tile size and the wide play/pause */
+  --me3-ctrl-size: 40px;
+  --me3-ctrl-wide: 120px;
+
+  /* Typography: every font number in the theme comes from here */
+  --me3-font: "Roboto Flex", "Roboto", sans-serif;
+  --me3-weight-body: 520;
+  --me3-weight-strong: 720;
+  --me3-weight-button: 600;
+  --me3-title-size: clamp(1.5rem, 5.8vw, 6.25rem);
+  --me3-title-weight: 800;
+  --me3-title-leading: 1.04;
+  --me3-title-tracking: -0.035em;
+
+  /* Colour of a saved (liked) heart; set to var(--me3-mauve) for pure purple */
+  --me3-like-color: var(--me3-pink);
+
+  /* Shapes (generated) */
+  --me3-cookie-nine: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='black' d='M50.00 0.26C51.42 0.26 52.91 0.75 54.25 1.42C55.59 2.10 56.87 3.30 58.06 4.30C59.25 5.31 60.29 6.59 61.40 7.46C62.51 8.33 63.52 9.10 64.73 9.54C65.93 9.98 67.20 10.04 68.61 10.09C70.02 10.13 71.64 9.82 73.20 9.82C74.76 9.81 76.51 9.71 77.97 10.06C79.43 10.40 80.89 10.99 81.97 11.90C83.06 12.81 83.88 14.14 84.48 15.52C85.08 16.90 85.28 18.64 85.54 20.17C85.81 21.71 85.78 23.36 86.07 24.74C86.36 26.12 86.65 27.36 87.29 28.47C87.93 29.58 88.86 30.45 89.91 31.39C90.96 32.33 92.40 33.13 93.60 34.13C94.80 35.13 96.20 36.17 97.10 37.38C98.00 38.58 98.74 39.97 98.99 41.36C99.23 42.76 99.01 44.31 98.58 45.75C98.15 47.19 97.18 48.65 96.40 50.00C95.62 51.35 94.54 52.59 93.87 53.84C93.20 55.08 92.63 56.22 92.41 57.48C92.18 58.74 92.34 60.00 92.54 61.40C92.74 62.80 93.33 64.33 93.60 65.87C93.88 67.40 94.28 69.11 94.19 70.61C94.11 72.11 93.79 73.64 93.08 74.87C92.37 76.10 91.20 77.14 89.94 77.97C88.69 78.79 87.01 79.30 85.54 79.83C84.08 80.35 82.45 80.61 81.14 81.14C79.83 81.67 78.66 82.16 77.68 82.99C76.70 83.81 76.01 84.87 75.26 86.07C74.51 87.27 73.98 88.83 73.20 90.18C72.42 91.54 71.64 93.10 70.61 94.19C69.58 95.29 68.34 96.26 67.01 96.74C65.68 97.23 64.11 97.28 62.62 97.10C61.13 96.93 59.52 96.23 58.06 95.70C56.59 95.16 55.18 94.31 53.84 93.87C52.50 93.43 51.28 93.06 50.00 93.06C48.72 93.06 47.50 93.43 46.16 93.87C44.82 94.31 43.41 95.16 41.94 95.70C40.48 96.23 38.87 96.93 37.38 97.10C35.89 97.28 34.32 97.23 32.99 96.74C31.66 96.26 30.42 95.29 29.39 94.19C28.36 93.10 27.58 91.54 26.80 90.18C26.02 88.83 25.49 87.27 24.74 86.07C23.99 84.87 23.30 83.81 22.32 82.99C21.34 82.16 20.17 81.67 18.86 81.14C17.55 80.61 15.92 80.35 14.46 79.83C12.99 79.30 11.31 78.79 10.06 77.97C8.80 77.14 7.63 76.10 6.92 74.87C6.21 73.64 5.89 72.11 5.81 70.61C5.72 69.11 6.12 67.40 6.40 65.87C6.67 64.33 7.26 62.80 7.46 61.40C7.66 60.00 7.82 58.74 7.59 57.48C7.37 56.22 6.80 55.08 6.13 53.84C5.46 52.59 4.38 51.35 3.60 50.00C2.82 48.65 1.85 47.19 1.42 45.75C0.99 44.31 0.77 42.76 1.01 41.36C1.26 39.97 2.00 38.58 2.90 37.38C3.80 36.17 5.20 35.13 6.40 34.13C7.60 33.13 9.04 32.33 10.09 31.39C11.14 30.45 12.07 29.58 12.71 28.47C13.35 27.36 13.64 26.12 13.93 24.74C14.22 23.36 14.19 21.71 14.46 20.17C14.72 18.64 14.92 16.90 15.52 15.52C16.12 14.14 16.94 12.81 18.03 11.90C19.11 10.99 20.57 10.40 22.03 10.06C23.49 9.71 25.24 9.81 26.80 9.82C28.36 9.82 29.98 10.13 31.39 10.09C32.80 10.04 34.07 9.98 35.27 9.54C36.48 9.10 37.49 8.33 38.60 7.46C39.71 6.59 40.75 5.31 41.94 4.30C43.13 3.30 44.41 2.10 45.75 1.42C47.09 0.75 48.58 0.26 50.00 0.26Z'/%3E%3C/svg%3E");
+  --me3-wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14' viewBox='0 0 28 14'%3E%3Cpath d='M-4 4.65 L-3 5.13 L-2 5.70 L-1 6.33 L0 7.00 L1 7.67 L2 8.30 L3 8.87 L4 9.35 L5 9.70 L6 9.92 L7 10.00 L8 9.92 L9 9.70 L10 9.35 L11 8.87 L12 8.30 L13 7.67 L14 7.00 L15 6.33 L16 5.70 L17 5.13 L18 4.65 L19 4.30 L20 4.08 L21 4.00 L22 4.08 L23 4.30 L24 4.65 L25 5.13 L26 5.70 L27 6.33 L28 7.00 L29 7.67 L30 8.30 L31 8.87 L32 9.35' fill='none' stroke='black' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* Spotify's own colour tokens, pointed at the palette */
+  --background-base: var(--me3-base) !important;
+  --background-highlight: var(--me3-surface) !important;
+  --background-press: var(--me3-surface-1) !important;
+  --background-elevated-base: var(--me3-surface) !important;
+  --background-elevated-highlight: var(--me3-surface-1) !important;
+  --background-elevated-press: var(--me3-surface-2) !important;
+  --text-base: var(--me3-text) !important;
+  --text-subdued: var(--me3-subtext) !important;
+  --text-bright-accent: var(--me3-mauve) !important;
+  --essential-base: var(--me3-text) !important;
+  --essential-subdued: var(--me3-subtext) !important;
+  --essential-bright-accent: var(--me3-mauve) !important;
+  --decorative-base: var(--me3-mauve) !important;
+  --decorative-subdued: var(--me3-surface-1) !important;
+  --spice-rgb-selected-row: 203, 166, 247;
+  --font-family: "Roboto Flex", "Roboto", sans-serif;
+  --font-family-body: "Roboto Flex", "Roboto", sans-serif;
+  --font-family-heading: "Roboto Flex", "Roboto", sans-serif;
+
+  /* Page margins */
+  --content-spacing: clamp(24px, 2.6vw, 40px);
+  --grid-gap: 24px;
+}
+
+/* Spotify's "bright accent" set paints the default green play button. */
+.encore-bright-accent-set {
+  --background-base: var(--me3-mauve) !important;
+  --background-highlight: var(--me3-lavender) !important;
+  --background-press: var(--me3-lavender) !important;
+  --text-base: var(--me3-crust) !important;
+}
+
+/* ---------------------------------------------------------------------
+   2. Layout: tonal layers with roomier margins
+   --------------------------------------------------------------------- */
+.Root__top-container {
+  gap: 16px;
+  padding: 16px;
+  background: var(--me3-crust) !important;
+  background-image: none !important;
+}
+
+.Root__globalNav,
+.Root__nav-bar,
+.main-yourLibraryX-libraryRootlist {
+  color: var(--me3-text);
+  background: var(--me3-mantle) !important;
+  background-image: none !important;
+  border-radius: var(--me3-radius-large) !important;
+}
+
+.Root__main-view,
+.main-view-container,
+.main-view-container__scroll-node-child,
+.main-home-home {
+  color: var(--me3-text);
+  background: var(--me3-base) !important;
+  background-image: none !important;
+}
+
+.Root__main-view,
+.main-view-container {
+  border-radius: var(--me3-radius-large) !important;
+  overflow: hidden;
+}
+
+.Root__main-view,
+.main-view-container,
+.main-view-container__scroll-node-child {
+  --content-spacing: clamp(24px, 2.6vw, 40px);
+  --grid-gap: 24px;
+}
+
+/* ---------------------------------------------------------------------
+   3. Carousels: exactly ONE surface per carousel, on the shelf itself.
+      Hooks: Spotify's own [data-shelf] markers and .main-shelf-shelf, plus
+      [data-me3-shelf], which theme.js adds to any block that holds a single
+      heading and a row of cards.
+   --------------------------------------------------------------------- */
+
+:is(.main-shelf-shelf, [data-shelf], [data-shelf-collapsable], [data-me3-shelf]) {
+  box-sizing: border-box;
+  margin-block: 20px;
+  padding: 20px 20px 12px;
+  border: 1px solid rgb(203 166 247 / 14%);
+  border-radius: var(--me3-radius-large) !important;
+  background: rgb(49 50 68 / 62%) !important;
+  background-image: none !important;
+}
+
+/* Nothing inside a shelf may paint a second surface. */
+:is(.main-shelf-shelf, [data-shelf], [data-shelf-collapsable], [data-me3-shelf]) :is(
+  .main-shelf-shelf, [data-shelf], [data-shelf-collapsable], [data-me3-shelf],
+  .main-shelf-section,
+  .main-gridContainer-gridContainer,
+  .x-carousel-carousel,
+  [data-testid*="carousel" i]
+) {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  margin-block: 0 !important;
+}
+
+:is(.main-shelf-shelf, [data-shelf], [data-shelf-collapsable], [data-me3-shelf]) .main-card-card {
+  background: transparent !important;
+}
+
+:is(.main-shelf-shelf, [data-shelf], [data-shelf-collapsable], [data-me3-shelf]) .main-card-card:hover {
+  background: rgb(69 71 90 / 70%) !important;
+}
+
+/* Keep horizontally clipped carousels free of dark edge masks and overlays. */
+:is(
+  .x-carousel-carousel,
+  .search-searchCategory-carousel,
+  .main-home-filterChipsContainer,
+  .main-home-filterChipsSection,
+  [data-testid*="carousel" i]
+) {
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+}
+
+:is(
+  .x-carousel-carousel,
+  .search-searchCategory-carousel,
+  .main-home-filterChipsContainer,
+  .main-home-filterChipsSection,
+  .main-shelf-shelf,
+  [data-shelf],
+  [data-shelf-collapsable],
+  [data-me3-shelf],
+  [data-testid*="carousel" i]
+)::before,
+:is(
+  .x-carousel-carousel,
+  .search-searchCategory-carousel,
+  .main-home-filterChipsContainer,
+  .main-home-filterChipsSection,
+  .main-shelf-shelf,
+  [data-shelf],
+  [data-shelf-collapsable],
+  [data-me3-shelf],
+  [data-testid*="carousel" i]
+)::after {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* Current Home grid carousels use a separate wrapper for their side overlays.
+   Keep the scroll-edge cue, but fade it with the theme surface instead of
+   Spotify's black gradient. */
+.W7ETd1fZHm0MV0Jqtjeu.wlt29eHDgK8xhXU4uIYM.VdoAFBSgMkSkMmW0NgAk::before,
+.W7ETd1fZHm0MV0Jqtjeu.wlt29eHDgK8xhXU4uIYM.VdoAFBSgMkSkMmW0NgAk > .JIrO_Kklclbf_mnPX9Dh::before {
+  background-color: transparent !important;
+  background-image: linear-gradient(90deg, var(--me3-surface), transparent) !important;
+}
+
+.W7ETd1fZHm0MV0Jqtjeu.wlt29eHDgK8xhXU4uIYM.VdoAFBSgMkSkMmW0NgAk::after,
+.W7ETd1fZHm0MV0Jqtjeu.wlt29eHDgK8xhXU4uIYM.VdoAFBSgMkSkMmW0NgAk > .JIrO_Kklclbf_mnPX9Dh::after {
+  background-color: transparent !important;
+  background-image: linear-gradient(270deg, var(--me3-surface), transparent) !important;
+}
+
+/* Carousel arrows */
+.x-carousel-button {
+  color: var(--me3-text) !important;
+  background: var(--me3-surface-1) !important;
+  border-radius: var(--me3-radius-pill) !important;
+}
+
+/* ---------------------------------------------------------------------
+   4. Typography
+      Everything below reads the --me3-* typography tokens in section 1.
+   --------------------------------------------------------------------- */
+
+html {
+  font-optical-sizing: auto;   /* Roboto Flex opsz axis follows the font size */
+}
+
+body,
+button,
+input,
+textarea,
+select,
+[contenteditable="true"] {
+  font-family: var(--me3-font) !important;
+  font-weight: var(--me3-weight-body);
+}
+
+/* Spotify (Encore) sets its own weight per text style; push each one up. */
+[data-encore-id="text"],
+.encore-text,
+[class*="encore-text-body"],
+[class*="encore-text-marginal"],
+[class*="encore-text-minuet"] {
+  font-weight: var(--me3-weight-body) !important;
+}
+
+[data-encore-id="text"][class*="bold" i],
+.encore-text[class*="bold" i],
+[class*="encore-text-title"],
+[class*="encore-text-headline"],
+h1, h2, h3, h4,
+.main-cardHeader-text,
+.main-trackList-rowTitle,
+.main-shelf-title {
+  font-weight: var(--me3-weight-strong) !important;
+}
+
+button,
+[role="button"] {
+  font-weight: var(--me3-weight-button);
+}
+
+/* Artist / playlist / album titles: big and roomy */
+.main-entityHeader-container {
+  gap: clamp(12px, 2.7vw, 32px);
+  min-width: 0;
+  min-height: max-content !important;
+  height: auto !important;
+  overflow: visible !important;
+  padding: 48px var(--content-spacing) 32px !important;
+}
+
+.main-entityHeader-headerText {
+  gap: 12px;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  overflow: visible !important;
+}
+
+:is(.main-entityHeader-title, [data-testid="entityTitle"]),
+:is(.main-entityHeader-title, [data-testid="entityTitle"]) :is(h1, span, .main-entityHeader-titleInner),
+.main-entityHeader-titleInner {
+  font-size: var(--me3-title-size) !important;
+  font-weight: var(--me3-title-weight) !important;
+  line-height: var(--me3-title-leading) !important;
+  letter-spacing: var(--me3-title-tracking) !important;
+  padding-block: 0.06em;
+  display: block !important;
+  max-width: 100%;
+  min-width: 0;
+  white-space: normal !important;
+  overflow: visible !important;
+  overflow-wrap: anywhere;
+  -webkit-line-clamp: unset !important;
+  line-clamp: unset !important;
+}
+
+:is(.main-entityHeader-title, [data-testid="entityTitle"]) {
+  margin-block: 8px 12px !important;
+}
+
+/* ---------------------------------------------------------------------
+   5. Shape language and focus
+   --------------------------------------------------------------------- */
+.main-card-card,
+.main-cardImageContainer,
+.main-trackList-trackList,
+.main-playlistEditDetailsModal-container,
+.GenericModal,
+.main-contextMenu-menu {
+  border-radius: var(--me3-radius-medium) !important;
+}
+
+.main-yourLibraryX-libraryContainer {
+  border-radius: var(--me3-radius-large) !important;
+}
+
+button,
+[role="button"],
+.Button,
+.main-addButton-button {
+  border-radius: var(--me3-radius-small);
+}
+
+.main-navBar-navBar a,
+.main-yourLibraryX-navLink,
+.main-shelf-seeAll a,
+.main-filterChips-filterChip,
+.main-home-home button[role="tab"] {
+  border-radius: var(--me3-radius-pill) !important;
+}
+
+/* Artist follow controls are filled M3 buttons, using the same mauve
+   container and foreground as the active player controls. */
+.main-entityHeader-container :is(button, [role="button"]):is(
+  [data-testid*="follow" i],
+  [aria-label="Follow" i],
+  [aria-label="Following" i]
+) {
+  color: var(--me3-on-mauve-container) !important;
+  background: var(--me3-mauve-container) !important;
+  border: 0 !important;
+  border-radius: var(--me3-radius-pill) !important;
+  box-shadow: none !important;
+}
+
+.main-entityHeader-container :is(button, [role="button"]):is(
+  [data-testid*="follow" i],
+  [aria-label="Follow" i],
+  [aria-label="Following" i]
+):is(:hover, :focus-visible) {
+  color: var(--me3-crust) !important;
+  background: var(--me3-mauve) !important;
+}
+
+button:focus-visible,
+[role="button"]:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--me3-lavender) !important;
+  outline-offset: 3px;
+}
+
+/* ---------------------------------------------------------------------
+   6. Cards and artwork
+      Shapes use border-radius only. The old clip-path + animated radius on
+      every library thumbnail was a big part of the sidebar lag.
+   --------------------------------------------------------------------- */
+
+.main-card-card {
+  position: relative;
+  background: rgb(49 50 68 / 58%);
+  transition: background-color 180ms ease, transform 240ms var(--me3-ease-std);
+}
+
+.main-card-card:hover {
+  background: var(--me3-surface) !important;
+  transform: translateY(-2px);
+}
+
+.main-cardImageContainer,
+.main-cardImageContainer img,
+.main-cardImageContainer div,
+.main-trackList-rowImage,
+.main-trackList-rowImage img,
+.main-miniPlayer-coverArt,
+.main-miniPlayer-coverArt img,
+.cover-art,
+.cover-art-image {
+  border-radius: 22% !important;
+  overflow: hidden;
+}
+
+/* Header artwork keeps its playful tilt. */
+.main-entityHeader-image {
+  border-radius: 34% 18% 34% 18% !important;
+  overflow: hidden;
+  transform: rotate(-3deg);
+  box-shadow: 0 14px 36px rgb(17 17 27 / 32%);
+  transition: transform 260ms var(--me3-ease-std);
+}
+
+.main-entityHeader-image :is(img, .cover-art, .cover-art-image) {
+  border-radius: inherit !important;
+}
+
+.main-entityHeader-image:hover {
+  transform: rotate(0deg) scale(1.015);
+}
+
+.main-entityHeader-image:has([data-testid="edit-image-button"]) {
+  transform: rotate(-3deg);
+}
+
+.main-entityHeader-image:has([data-testid="edit-image-button"]):hover {
+  transform: rotate(0deg) scale(1.015);
+}
+
+/* "Choose photo" overlay stays flat so it follows the artwork. */
+.main-entityHeader-image :is(
+  [aria-label*="Choose photo" i], [title*="Choose photo" i],
+  [data-testid="edit-image-button"],
+  [data-testid*="imageUpload" i], [data-testid*="choosePhoto" i],
+  [class*="imageUpload" i], [class*="imageEdit" i],
+  [class*="choosePhoto" i], [class*="uploadButton" i]
+) {
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.main-entityHeader-image [data-testid="edit-image-button"] .icon {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+@media (max-width: 720px) {
+  .main-entityHeader-container {
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-block: 24px 20px !important;
+  }
+
+  .main-entityHeader-headerText {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+}
+
+/* Preserve the old sidebar artwork treatment and Spotify's native row sizing. */
+.main-yourLibraryX-libraryItem img,
+.main-yourLibraryX-libraryItem [data-testid="cover-art-image"],
+.main-rootlist-rootlistItem img,
+.main-rootlist-rootlistItem [data-testid="cover-art-image"] {
+  border-radius: 32% 18% 32% 18% !important;
+  transform: rotate(-3deg);
+}
+
+.main-yourLibraryX-libraryItem:hover img,
+.main-yourLibraryX-libraryItem:hover [data-testid="cover-art-image"],
+.main-rootlist-rootlistItem:hover img,
+.main-rootlist-rootlistItem:hover [data-testid="cover-art-image"] {
+  transform: rotate(0deg);
+}
+
+/* ---------------------------------------------------------------------
+   7. Player bar: one surface, straight artwork
+   --------------------------------------------------------------------- */
+
+.Root__now-playing-bar {
+  margin: 0 !important;
+  padding: 8px 16px !important;
+  border: 1px solid rgb(203 166 247 / 12%) !important;
+  border-radius: var(--me3-radius-large) !important;
+  background: var(--me3-mantle) !important;
+  background-image: none !important;
+  box-shadow: 0 8px 24px rgb(17 17 27 / 22%) !important;
+}
+
+.main-nowPlayingBar-container,
+.main-nowPlayingBar-nowPlayingBar {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+.main-nowPlayingBar-nowPlayingBar,
+.main-nowPlayingBar-left,
+.main-nowPlayingBar-center,
+.main-nowPlayingBar-right {
+  align-items: center;
+}
+
+/* Cover art: a fixed 56px Material shape centred in the bar. */
+.Root__now-playing-bar .main-nowPlayingWidget-nowPlaying {
+  align-items: center !important;
+}
+
+.Root__now-playing-bar :is(.main-nowPlayingWidget-coverArtContainer, .main-nowPlayingWidget-coverArt) {
+  display: block !important;
+  flex: 0 0 56px !important;
+  align-self: center !important;
+  margin: 0 !important;
+  width: 56px !important;
+  min-width: 56px !important;
+  height: 56px !important;
+  min-height: 56px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.Root__now-playing-bar [data-testid="cover-art-container"] {
+  position: relative !important;
+  display: block !important;
+  flex: 0 0 56px !important;
+  align-self: center !important;
+  width: 56px !important;
+  min-width: 56px !important;
+  height: 56px !important;
+  min-height: 56px !important;
+  margin: 0 !important;
+  overflow: visible !important;
+}
+
+.Root__now-playing-bar [data-testid="cover-art-container"] > div,
+.Root__now-playing-bar [data-testid="cover-drop-target"] {
+  display: block !important;
+  width: 56px !important;
+  min-width: 56px !important;
+  height: 56px !important;
+  min-height: 56px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  background: transparent !important;
+  border: 0 !important;
+}
+
+.Root__now-playing-bar [data-testid="cover-art-button"] {
+  position: relative !important;
+  display: block !important;
+  width: 56px !important;
+  min-width: 56px !important;
+  height: 56px !important;
+  min-height: 56px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  border-radius: 34% 18% 34% 18% !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+.Root__now-playing-bar [data-testid="cover-art-button"] > div,
+.Root__now-playing-bar [data-testid="cover-art-button"] [aria-hidden="true"] {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  background: transparent !important;
+  border-radius: inherit !important;
+}
+
+.Root__now-playing-bar [data-testid="cover-art-button"] [aria-hidden="true"] > div:has(> svg),
+.Root__now-playing-bar [data-testid="cover-art-button"] svg,
+.Root__now-playing-bar [data-testid="cover-art-button"]::before {
+  display: none !important;
+  content: none !important;
+}
+
+.Root__now-playing-bar [data-testid="cover-art-button"] img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: inherit !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.Root__now-playing-bar :is(.main-nowPlayingWidget-coverArtContainer, .main-nowPlayingWidget-coverArt) :is(img, .cover-art, .cover-art-image) {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.Root__now-playing-bar .main-coverSlotCollapsed-container {
+  position: relative !important;
+  inset: auto !important;
+  display: block !important;
+  flex: 0 0 56px;
+  align-self: center !important;
+  width: 56px !important;
+  height: 56px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+  border-radius: 16px !important;
+  transform: none !important;
+  rotate: none !important;
+  scale: none !important;
+  clip-path: none !important;
+}
+
+.Root__now-playing-bar .main-coverSlotCollapsed-container .cover-art {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  transform: none !important;
+  clip-path: none !important;
+}
+
+.Root__now-playing-bar .main-coverSlotCollapsed-container :is(img, .cover-art-image) {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  border-radius: 0 !important;
+  transform: none !important;
+  clip-path: none !important;
+}
+
+.Root__now-playing-bar :is(
+  .main-coverSlotCollapsed-expandButton,
+  .main-coverSlotCollapsed-container button[aria-label*="xpand" i]
+) {
+  display: none !important;
+}
+
+/* "Playing on <device>" strip under the player: no fill, mauve text only */
+.main-connectBar-connectBar,
+.main-connectBar-connectBar :is(.encore-bright-accent-set, .encore-dark-theme, .encore-base-set) {
+  --background-base: transparent !important;
+  --background-highlight: transparent !important;
+  --background-press: transparent !important;
+  --text-base: var(--me3-mauve) !important;
+  --text-subdued: var(--me3-mauve) !important;
+  --essential-base: var(--me3-mauve) !important;
+  --essential-subdued: var(--me3-mauve) !important;
+}
+
+.main-connectBar-connectBar {
+  color: var(--me3-mauve) !important;
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.main-connectBar-connectBar::before,
+.main-connectBar-connectBar::after {
+  background: none !important;
+  background-image: none !important;
+  border: 0 !important;
+}
+
+.main-connectBar-connectBar * {
+  color: var(--me3-mauve) !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+.main-connectBar-connectBar svg {
+  fill: currentColor !important;
+}
+
+/* ---------------------------------------------------------------------
+   7a. Volume: a rounded purple line that gets noticeably taller on hover.
+      The slider keeps a steady width so the player controls do not shift.
+   --------------------------------------------------------------------- */
+
+:is([data-testid="volume-bar"], .main-nowPlayingBar-volumeBar, .volume-bar, .playback-bar__volume-bar),
+:is([data-testid="volume-bar"], .main-nowPlayingBar-volumeBar, .volume-bar, .playback-bar__volume-bar) * {
+  --progress-bar-height: 8px !important;
+  --progress-bar-radius: 999px !important;
+  --bg-color: var(--me3-surface-1) !important;
+  --fg-color: var(--me3-mauve) !important;
+}
+
+:is([data-testid="volume-bar"], .main-nowPlayingBar-volumeBar, .volume-bar, .playback-bar__volume-bar):hover,
+:is([data-testid="volume-bar"], .main-nowPlayingBar-volumeBar, .volume-bar, .playback-bar__volume-bar):hover * {
+  --progress-bar-height: 12px !important;
+}
+
+:is([data-testid="volume-bar"], .main-nowPlayingBar-volumeBar, .volume-bar, .playback-bar__volume-bar) :is(
+  .x-progressBar-progressBarBg,
+  .x-progressBar-background,
+  .progress-bar__bg,
+  .volume-bar__bg
+) {
+  height: var(--progress-bar-height) !important;
+  min-height: var(--progress-bar-height) !important;
+  border-radius: var(--me3-radius-pill) !important;
+  background-color: var(--me3-surface-1) !important;
+  background-image: none !important;
+  transition: height 160ms var(--me3-ease-std), min-height 160ms var(--me3-ease-std);
+}
+
+:is([data-testid="volume-bar"], .main-nowPlayingBar-volumeBar, .volume-bar, .playback-bar__volume-bar) :is(
+  .x-progressBar-fillColor,
+  .x-progressBar-foreground,
+  .progress-bar__fg,
+  .volume-bar__fg
+) {
+  height: var(--progress-bar-height) !important;
+  min-height: var(--progress-bar-height) !important;
+  border-radius: var(--me3-radius-pill) !important;
+  background-color: var(--me3-mauve) !important;
+  background-image: none !important;
+  -webkit-mask: none !important;
+  mask: none !important;
+  animation: none !important;
+  transition: height 160ms var(--me3-ease-std), min-height 160ms var(--me3-ease-std);
+}
+
+:is([data-testid="volume-bar"], .main-nowPlayingBar-volumeBar, .volume-bar, .playback-bar__volume-bar) input[type="range"] {
+  height: 18px !important;
+  accent-color: var(--me3-mauve) !important;
+}
+
+/* Fixed width: 160px normally, 230px when the volume-percentage plugin is present. */
+[data-testid="volume-bar"] {
+  --me3-vol-basis: 160px;
+  flex: 0 1 var(--me3-vol-basis) !important;
+  width: var(--me3-vol-basis) !important;
+  max-width: none !important;
+  min-width: 0;
+  transition: none !important;
+}
+
+[data-testid="volume-bar"].volume-percentage-wrapper {
+  --me3-vol-basis: 230px;
+}
+
+[data-testid="volume-bar"].volume-percentage-wrapper.inherit-flex {
+  --me3-vol-basis: 160px;
+}
+
+.main-nowPlayingBar-volumeBar:not([data-testid="volume-bar"]) {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  max-width: none !important;
+}
+
+.volume-bar__slider-container {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Optional "Volume Percentage" extension: sits right of the slider */
+#volume-percentage {
+  flex: 0 0 auto !important;
+  min-width: 3.6ch;
+  margin-left: 10px !important;
+  font-size: 13px !important;
+  font-weight: var(--me3-weight-strong);
+  text-align: right;
+  color: var(--me3-subtext) !important;
+  background: transparent !important;
+  transition: color 160ms ease;
+}
+
+#volume-percentage:hover {
+  color: var(--me3-mauve) !important;
+}
+
+#volume-percentage-edit {
+  color: var(--me3-text) !important;
+  border-bottom-color: var(--me3-mauve) !important;
+}
+
+/* ---------------------------------------------------------------------
+   7b. Seek bar: M3 Expressive wavy progress.
+       Native bar stays in place as the invisible hit area (clicks, drag,
+       keyboard). theme.js paints .me3-seek on top. Played part = purple wave
+       that travels while playing and flattens when paused; a gap, a vertical
+       handle, a gap, then the grey track. Nothing overlaps.
+   --------------------------------------------------------------------- */
+.playback-bar {
+  margin-inline: clamp(8px, 1.2vw, 18px);
+}
+
+.playback-bar .playback-progressbar {
+  position: relative;
+  height: 24px;
+  min-height: 24px;
+}
+
+/* Fallback without theme.js: plain purple pill, grey track only past the fill */
+.playback-bar .playback-progressbar,
+.playback-bar .playback-progressbar * {
+  --progress-bar-height: 6px;
+  --progress-bar-radius: 999px;
+  --bg-color: var(--me3-surface-1);
+  --fg-color: var(--me3-mauve);
+}
+
+.playback-bar :is(.x-progressBar-progressBarBg, .x-progressBar-background) {
+  background-color: var(--me3-surface-1) !important;
+  border-radius: var(--me3-radius-pill) !important;
+  overflow: hidden;
+}
+
+.playback-bar :is(.x-progressBar-foregroundWrapper, .x-progressBar-middleground, .x-progressBar-sliderArea) {
+  background: transparent !important;
+}
+
+.playback-bar :is(.x-progressBar-fillColor, .x-progressBar-foreground, .x-progressBar-progressFillColor) {
+  background-color: var(--me3-mauve) !important;
+  background-image: none !important;
+  border-radius: var(--me3-radius-pill) !important;
+}
+
+/* With theme.js running, hide the native visuals but keep them clickable */
+html.me3-seek-ready .playback-bar .playback-progressbar > :not(.me3-seek) {
+  opacity: 0 !important;
+}
+
+.me3-seek {
+  --me3-seek-gap: 6px;
+  --me3-seek-thumb: 4px;
+  --me3-seek-wave-period: 2.2s;   /* one wave cycle; larger = slower */
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.me3-seek__active,
+.me3-seek__flat {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  translate: 0 -50%;
+  width: max(0px, calc(var(--p, 0) * 100% - var(--me3-seek-gap) - var(--me3-seek-thumb) / 2));
+  transition: opacity 280ms var(--me3-ease-std);
+}
+
+.me3-seek__active {
+  height: 14px;
+  overflow: hidden;
+}
+
+.me3-seek__wave {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -28px;
+  right: 0;
+  background: var(--me3-mauve);
+  -webkit-mask-image: var(--me3-wave);
+  mask-image: var(--me3-wave);
+  -webkit-mask-repeat: repeat-x;
+  mask-repeat: repeat-x;
+  -webkit-mask-size: 28px 14px;
+  mask-size: 28px 14px;
+  -webkit-mask-position: 0 0;
+  mask-position: 0 0;
+  animation: me3-wave var(--me3-seek-wave-period) linear infinite;
+}
+
+@keyframes me3-wave {
+  to { transform: translateX(28px); }
+}
+
+.me3-seek__flat {
+  height: 4px;
+  border-radius: var(--me3-radius-pill);
+  background: var(--me3-mauve);
+  opacity: 0;
+}
+
+.me3-seek[data-playing="false"] .me3-seek__active { opacity: 0; }
+.me3-seek[data-playing="false"] .me3-seek__flat { opacity: 1; }
+.me3-seek[data-playing="false"] .me3-seek__wave { animation-play-state: paused; }
+
+.me3-seek__track {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  left: calc(var(--p, 0) * 100% + var(--me3-seek-gap) + var(--me3-seek-thumb) / 2);
+  right: 0;
+  height: 4px;
+  border-radius: var(--me3-radius-pill);
+  background: var(--me3-surface-1);
+}
+
+/* M3 stop indicator at the end of the track */
+.me3-seek__track::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--me3-mauve);
+}
+
+.me3-seek[data-end="true"] .me3-seek__track { display: none; }
+
+.me3-seek__thumb {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--p, 0) * 100%);
+  translate: -50% -50%;
+  width: var(--me3-seek-thumb);
+  height: 22px;
+  border-radius: var(--me3-radius-pill);
+  background: var(--me3-mauve);
+  transition: width 160ms var(--me3-ease-std), background-color 160ms ease;
+}
+
+.playback-bar .playback-progressbar:hover .me3-seek__thumb { background: var(--me3-lavender); }
+.me3-seek[data-dragging="true"] .me3-seek__thumb { width: 2px; background: var(--me3-lavender); }
+
+/* ---------------------------------------------------------------------
+   7c. Player controls: rounded-square tiles around a wide play/pause
+       Shuffle, previous, next and repeat are surface-coloured tiles; shuffle
+       and repeat switch to the mauve container while on. Play/pause is the
+       wide mauve-container tile. Glyphs come from section 10 / theme.js (outlined and a
+       touch bolder, as in the reference). The bar is excluded from section 8's cookie.
+   --------------------------------------------------------------------- */
+.player-controls__buttons {
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.player-controls__buttons :is(.player-controls__left, .player-controls__right) {
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.Root__now-playing-bar .player-controls__buttons button {
+  --me3-fill: 0;
+  --me3-wght: 500;
+  position: relative;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 auto;
+  width: var(--me3-ctrl-size) !important;
+  min-width: var(--me3-ctrl-size) !important;
+  height: var(--me3-ctrl-size) !important;
+  min-height: var(--me3-ctrl-size) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: var(--me3-text) !important;
+  background: var(--me3-surface) !important;
+  border: 0 !important;
+  border-radius: var(--me3-radius-small) !important;
+  box-shadow: none !important;
+  transform: none !important;
+  transition: background-color 180ms ease, box-shadow 180ms ease, scale 240ms var(--me3-ease-spring) !important;
+}
+
+/* Glyphs by position: theme.js tags the five buttons (data-me3-ctl), so a tile
+   never depends on Spotify's label wording or markup. A button that is neither
+   tagged nor label-matched keeps Spotify's own icon rather than going blank. */
+.Root__now-playing-bar .player-controls__buttons button[data-me3-ctl="shuffle"]::before { content: "shuffle"; }
+.Root__now-playing-bar .player-controls__buttons button[data-me3-ctl="prev"]::before { content: "skip_previous"; }
+.Root__now-playing-bar .player-controls__buttons button[data-me3-ctl="next"]::before { content: "skip_next"; }
+.Root__now-playing-bar .player-controls__buttons button[data-me3-ctl="repeat"]::before { content: "repeat"; }
+.Root__now-playing-bar .player-controls__buttons button[data-me3-ctl="repeat"]:is([data-me3-state="one"], :not([data-me3-state]):is([aria-label="Disable repeat" i], [aria-checked="mixed"]))::before { content: "repeat_one"; }
+
+/* native icon wrappers and Spotify's "active dot": only our glyph stays */
+.Root__now-playing-bar .player-controls__buttons :is(button[data-me3-ctl], button[data-testid="control-button-playpause"]) > * {
+  display: none !important;
+}
+
+.Root__now-playing-bar .player-controls__buttons button::after {
+  content: none !important;
+}
+
+.Root__now-playing-bar .player-controls__buttons button::before {
+  /* The glyph fills the tile and centres itself. Spotify draws its active
+     "dot" on a button's pseudo-element (same size, bottom centre), so the
+     resets below keep that styling from squashing or displacing the glyph. */
+  position: absolute;
+  inset: 0;
+  width: auto !important;
+  height: auto !important;
+  margin: 0;
+  border-radius: 0;
+  background: none !important;
+  transform: none !important;
+  font-size: 22px;
+}
+
+/* play / pause */
+.Root__now-playing-bar .player-controls__buttons button[data-testid="control-button-playpause"] {
+  width: var(--me3-ctrl-wide) !important;
+  min-width: var(--me3-ctrl-wide) !important;
+}
+
+.Root__now-playing-bar .player-controls__buttons button[data-testid="control-button-playpause"]::before {
+  font-size: 28px;
+}
+
+/* play / pause, and shuffle / repeat while switched on. theme.js writes
+   data-me3-state (shuffle: off | on | smart, repeat: off | all | one) from the
+   player itself; the labels below are only a fallback when it is missing. */
+.Root__now-playing-bar .player-controls__buttons button:is(
+  [data-testid="control-button-playpause"],
+  [data-me3-state]:not([data-me3-state="off"]),
+  :not([data-me3-state]):is(
+    [aria-checked="true"], [aria-checked="mixed"], .control-button--active,
+    [aria-label="Enable smart shuffle" i], [aria-label="Disable smart shuffle" i], [aria-label="Disable shuffle" i],
+    [aria-label="Enable repeat one" i], [aria-label="Disable repeat" i]
+  )
+) {
+  color: var(--me3-on-mauve-container) !important;
+  background: var(--me3-mauve-container) !important;
+}
+
+/* smart shuffle: the glyph moves up a little and a dot sits under it */
+.Root__now-playing-bar .player-controls__buttons button[data-me3-state="smart"]::before {
+  translate: 0 -3px;
+}
+
+.Root__now-playing-bar .player-controls__buttons button[data-me3-state="smart"]::after {
+  content: "" !important;
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  width: 4px;
+  height: 4px;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* state layers: 8% on hover / focus, 14% and a small squeeze while pressed */
+.Root__now-playing-bar .player-controls__buttons button:is(:hover, :focus-visible) {
+  box-shadow: inset 0 0 0 999px rgb(255 255 255 / 8%) !important;
+}
+
+.Root__now-playing-bar .player-controls__buttons button:active {
+  scale: .94;
+  box-shadow: inset 0 0 0 999px rgb(255 255 255 / 14%) !important;
+}
+
+.Root__now-playing-bar .player-controls__buttons button:is(:disabled, [aria-disabled="true"]) {
+  opacity: .38;
+  pointer-events: none;
+}
+
+/* time stamps: bold and steady-width so they do not jitter */
+.playback-bar :is(.playback-bar__progress-time-elapsed, .playback-bar__progress-time) {
+  color: var(--me3-subtext) !important;
+  font-weight: var(--me3-weight-strong) !important;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------------
+   8. Play buttons: Material 9-sided cookie, replacing Spotify's round button entirely
+      Spotify's button is a <button> holding an inner coloured circle, a focus
+      ring and an SVG. All of those children are hidden so only OUR shape and
+      OUR glyph remain (this was the leftover circle and the upward shift).
+      The player bar is excluded here: its play/pause is the wide tile in 7c.
+   --------------------------------------------------------------------- */
+
+:is(
+  button[data-testid="control-button-playpause"],
+  .main-actionBar-ActionBar [data-testid="play-button"],
+  .main-topBar-playButtonWrapper button,
+  .main-playButton-PlayButton button,
+  .main-card-PlayButtonContainer button,
+  .main-heroCard-PlayButtonContainer button,
+  .view-homeShortcutsGrid-PlayButtonContainer button,
+  button.main-playButton-PlayButton,
+  button.view-homeShortcutsGrid-playButton
+):not(.main-trackList-trackListRow *, .Root__now-playing-bar *) {
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 auto;
+  width: 42px !important;
+  min-width: 42px !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  margin: 0;
+  padding: 0 !important;
+  color: var(--me3-crust) !important;
+  background: var(--me3-mauve) !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  outline-offset: 0;
+  clip-path: none !important;
+  -webkit-mask-image: var(--me3-cookie-nine) !important;
+  mask-image: var(--me3-cookie-nine) !important;
+  -webkit-mask-size: 100% 100% !important;
+  mask-size: 100% 100% !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
+  -webkit-mask-position: center !important;
+  mask-position: center !important;
+  transition: background-color 180ms ease, scale 240ms var(--me3-ease-spring) !important;
+}
+
+/* hide every native child: inner circle, focus ring, svg, label spans */
+:is(
+  button[data-testid="control-button-playpause"],
+  .main-actionBar-ActionBar [data-testid="play-button"],
+  .main-topBar-playButtonWrapper button,
+  .main-playButton-PlayButton button,
+  .main-card-PlayButtonContainer button,
+  .main-heroCard-PlayButtonContainer button,
+  .view-homeShortcutsGrid-PlayButtonContainer button,
+  button.main-playButton-PlayButton,
+  button.view-homeShortcutsGrid-playButton
+):not(.main-trackList-trackListRow *, .Root__now-playing-bar *) > * {
+  display: none !important;
+}
+
+.main-actionBar-ActionBar [data-testid="play-button"]:not(.main-trackList-trackListRow *, .Root__now-playing-bar *) {
+  width: 48px !important;
+  min-width: 48px !important;
+  height: 48px !important;
+  min-height: 48px !important;
+}
+
+:is(
+  button[data-testid="control-button-playpause"],
+  .main-actionBar-ActionBar [data-testid="play-button"],
+  .main-topBar-playButtonWrapper button,
+  .main-playButton-PlayButton button,
+  .main-card-PlayButtonContainer button,
+  .main-heroCard-PlayButtonContainer button,
+  .view-homeShortcutsGrid-PlayButtonContainer button
+):not(.main-trackList-trackListRow *, .Root__now-playing-bar *):is(:hover, :focus-visible) {
+  background: var(--me3-lavender) !important;
+  scale: 1.06;
+}
+
+:is(
+  button[data-testid="control-button-playpause"],
+  .main-actionBar-ActionBar [data-testid="play-button"],
+  .main-topBar-playButtonWrapper button,
+  .main-playButton-PlayButton button,
+  .main-card-PlayButtonContainer button,
+  .main-heroCard-PlayButtonContainer button,
+  .view-homeShortcutsGrid-PlayButtonContainer button
+):not(.main-trackList-trackListRow *, .Root__now-playing-bar *):active {
+  scale: 0.94;
+}
+
+:is(
+  button[data-testid="control-button-playpause"],
+  .main-actionBar-ActionBar [data-testid="play-button"],
+  .main-topBar-playButtonWrapper button,
+  .main-playButton-PlayButton button,
+  .main-card-PlayButtonContainer button,
+  .main-heroCard-PlayButtonContainer button,
+  .view-homeShortcutsGrid-PlayButtonContainer button,
+  button.main-playButton-PlayButton,
+  button.view-homeShortcutsGrid-playButton
+):not(.main-trackList-trackListRow *, .Root__now-playing-bar *)::before {
+  display: block !important;
+  width: 1em;
+  height: 1em;
+  color: var(--me3-crust) !important;
+  font-size: 24px !important;
+  line-height: 1 !important;
+  text-align: center;
+}
+
+/* ---------------------------------------------------------------------
+   9. Track rows: play / pause on the artwork, centred, only while hovering
+      theme.js draws one floating .me3-art-play over the hovered row's artwork
+      and forwards a click on the artwork to the row's own play button. The
+      native index-column play icon is hidden for rows with artwork. The active
+      row keeps its track number instead of Spotify's animated equalizer.
+      Artwork overlay buttons stay hidden so there is never a second control.
+   --------------------------------------------------------------------- */
+
+.main-trackList-trackList[data-me3-art] .main-trackList-rowSectionIndex :is(button, .main-trackList-rowPlayPauseIcon, .main-trackList-rowImagePlayIcon) {
+  opacity: 0 !important;
+}
+
+.main-trackList-trackList .main-trackList-trackListRow.main-trackList-active .main-trackList-rowSectionIndex :is(.main-trackList-rowPlayPauseIcon, .main-trackList-rowImagePlayIcon, button[aria-label^="Pause" i]) {
+  display: none !important;
+  opacity: 0 !important;
+}
+
+.main-trackList-trackList .main-trackList-trackListRow.main-trackList-active .main-trackList-rowSectionIndex .main-trackList-number {
+  display: inline !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  color: var(--me3-mauve) !important;
+}
+
+.main-trackList-trackList[data-me3-art] .main-trackList-trackListRow:hover .main-trackList-rowSectionIndex .main-trackList-number {
+  display: inline !important;
+  opacity: 1 !important;
+}
+
+.main-trackList-trackList .main-trackList-rowSectionStart :is(.main-trackList-rowImagePlayButton, .main-trackList-rowImagePlayPauseButton) {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.me3-art-play {
+  position: fixed;
+  z-index: 50;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border-radius: 22%;
+  color: var(--me3-text);
+  background: rgb(17 17 27 / 58%);
+  opacity: 0;
+  scale: .9;
+  pointer-events: none;
+  transition: opacity 140ms ease, scale 240ms var(--me3-ease-spring);
+}
+
+.me3-art-play.is-visible {
+  opacity: 1;
+  scale: 1;
+}
+
+/* play and pause share one box, one size, one font: always the same place */
+.me3-art-play__glyph {
+  --me3-fill: 1;
+  --me3-wght: 500;
+  display: block;
+  width: 1em;
+  height: 1em;
+  font-size: 24px;
+  text-align: center;
+  filter: drop-shadow(0 1px 3px rgb(17 17 27 / 70%));
+}
+
+/* ---------------------------------------------------------------------
+   10. Icons: Google Material Symbols Rounded replace Spotify's SVGs.
+       To restyle one more icon: add its aria-label to the hide list, add a
+       `content` line to the table, and add the icon name to icon_names in
+       the font @import at the top (the names must stay alphabetical).
+   --------------------------------------------------------------------- */
+/* Playlist and album action bars use a different shuffle button from the
+   player transport. Give both current markup forms the same M3 glyph. */
+.main-actionBar-ActionBar :is(button, [role="button"]):is(
+  [data-testid*="shuffle" i],
+  [aria-label*="shuffle" i]
+) {
+  --me3-fill: 0;
+  --me3-wght: 500;
+}
+
+.main-actionBar-ActionBar :is(button, [role="button"]):is(
+  [data-testid*="shuffle" i],
+  [aria-label*="shuffle" i]
+) > * {
+  display: none !important;
+}
+
+.main-actionBar-ActionBar :is(button, [role="button"]):is(
+  [data-testid*="shuffle" i],
+  [aria-label*="shuffle" i]
+)::before {
+  content: "shuffle" !important;
+  display: inline-grid;
+  place-items: center;
+  width: 1em;
+  height: 1em;
+  font-family: "Material Symbols Rounded", sans-serif !important;
+  font-size: 22px;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1;
+  font-feature-settings: "liga";
+  font-variation-settings: "FILL" var(--me3-fill), "wght" var(--me3-wght), "GRAD" 0, "opsz" 24;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* hide Spotify's SVG so icons never double up */
+:is(button, [role="button"], a):is(
+  [aria-label="Play" i],
+  [aria-label^="Play " i],
+  [aria-label="Pause" i],
+  [aria-label^="Pause " i],
+  [aria-label="Next" i],
+  [aria-label="Next track" i],
+  [aria-label="Previous" i],
+  [aria-label="Previous track" i],
+  [aria-label="Shuffle" i],
+  [aria-label="Enable shuffle" i],
+  [aria-label="Disable shuffle" i],
+  [aria-label="Enable smart shuffle" i],
+  [aria-label="Disable smart shuffle" i],
+  [aria-label="Repeat" i],
+  [aria-label="Enable repeat" i],
+  [aria-label="Enable repeat one" i],
+  [aria-label="Disable repeat" i],
+  [aria-label="Volume" i],
+  [aria-label="Mute" i],
+  [aria-label="Unmute" i],
+  [aria-label="Queue" i],
+  [aria-label="Lyrics" i],
+  [aria-label="Connect to a device" i],
+  [aria-label="Miniplayer" i],
+  [aria-label="Open Miniplayer" i],
+  [aria-label="Close Miniplayer" i],
+  [aria-label="Full screen" i],
+  [aria-label="Enter full screen" i],
+  [aria-label="Exit full screen" i],
+  [aria-label="Now playing view" i],
+  [aria-label="Save to Your Library" i],
+  [aria-label="Add to Your Library" i],
+  [aria-label="Add to Liked Songs" i],
+  [aria-label="Remove from Your Library" i],
+  [aria-label="Remove from Liked Songs" i],
+  [aria-label="Add to playlist" i],
+  [aria-label="Search" i],
+  [aria-label="Search in Your Library" i],
+  [aria-label="Home" i],
+  [aria-label="Explore" i],
+  [aria-label="Browse" i],
+  [aria-label="Your Library" i],
+  [aria-label="Collapse Your Library" i],
+  [aria-label="Expand Your Library" i],
+  [aria-label="Open Your Library" i],
+  [aria-label="Create playlist or folder" i],
+  [aria-label="Create" i],
+  [aria-label="Go back" i],
+  [aria-label="Go forward" i],
+  [aria-label="Download" i],
+  [aria-label^="More options" i],
+  [aria-label="Close" i],
+  [aria-label="Clear search field" i],
+  [aria-label="What's New" i],
+  [aria-label="What’s New" i],
+  [aria-label="Friend Activity" i]
+) svg {
+  display: none !important;
+}
+
+/* One glyph recipe for controls that actually receive a Material label. Do
+   not create a pseudo-element for every labelled card, link, and button on
+   Home; those account for most of the view's DOM churn. */
+:is(button, [role="button"], a):is(
+  [aria-label^="Play" i],
+  [aria-label^="Pause" i],
+  [aria-label="Next" i],
+  [aria-label="Next track" i],
+  [aria-label="Previous" i],
+  [aria-label="Previous track" i],
+  [aria-label*="shuffle" i],
+  [aria-label="Repeat" i],
+  [aria-label="Enable repeat" i],
+  [aria-label="Enable repeat one" i],
+  [aria-label="Disable repeat" i],
+  [aria-label="Volume" i],
+  [aria-label="Mute" i],
+  [aria-label="Unmute" i],
+  [aria-label="Queue" i],
+  [aria-label="Lyrics" i],
+  [aria-label="Connect to a device" i],
+  [aria-label="Miniplayer" i],
+  [aria-label="Open Miniplayer" i],
+  [aria-label="Close Miniplayer" i],
+  [aria-label="Full screen" i],
+  [aria-label="Enter full screen" i],
+  [aria-label="Exit full screen" i],
+  [aria-label="Now playing view" i],
+  [aria-label="Save to Your Library" i],
+  [aria-label="Add to Your Library" i],
+  [aria-label="Add to Liked Songs" i],
+  [aria-label="Remove from Your Library" i],
+  [aria-label="Remove from Liked Songs" i],
+  [aria-label="Add to playlist" i],
+  [aria-label="Search" i],
+  [aria-label="Search in Your Library" i],
+  [aria-label="What's New" i],
+  [aria-label="What’s New" i],
+  [aria-label="Friend Activity" i],
+  [aria-label="Home" i],
+  [aria-label="Explore" i],
+  [aria-label="Browse" i],
+  [aria-label="Your Library" i],
+  [aria-label="Collapse Your Library" i],
+  [aria-label="Expand Your Library" i],
+  [aria-label="Open Your Library" i],
+  [aria-label="Create playlist or folder" i],
+  [aria-label="Create" i],
+  [aria-label="Go back" i],
+  [aria-label="Go forward" i],
+  [aria-label="Download" i],
+  [aria-label^="More options" i],
+  [aria-label="Close" i],
+  [aria-label="Clear search field" i]
+)::before,
+button[data-me3-ctl]::before,
+[data-me3-like]::before,
+.me3-art-play__glyph {
+  font-family: "Material Symbols Rounded", sans-serif !important;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1;
+  white-space: nowrap;
+  font-feature-settings: "liga";
+  font-variation-settings: "FILL" var(--me3-fill, 0), "wght" var(--me3-wght, 450), "GRAD" 0, "opsz" 24;
+  -webkit-font-smoothing: antialiased;
+}
+
+:is(button, [role="button"], a):is(
+  [aria-label^="Play" i],
+  [aria-label^="Pause" i],
+  [aria-label="Next" i],
+  [aria-label="Next track" i],
+  [aria-label="Previous" i],
+  [aria-label="Previous track" i],
+  [aria-label*="shuffle" i],
+  [aria-label="Repeat" i],
+  [aria-label="Enable repeat" i],
+  [aria-label="Enable repeat one" i],
+  [aria-label="Disable repeat" i],
+  [aria-label="Volume" i],
+  [aria-label="Mute" i],
+  [aria-label="Unmute" i],
+  [aria-label="Queue" i],
+  [aria-label="Lyrics" i],
+  [aria-label="Connect to a device" i],
+  [aria-label="Miniplayer" i],
+  [aria-label="Open Miniplayer" i],
+  [aria-label="Close Miniplayer" i],
+  [aria-label="Full screen" i],
+  [aria-label="Enter full screen" i],
+  [aria-label="Exit full screen" i],
+  [aria-label="Now playing view" i],
+  [aria-label="Save to Your Library" i],
+  [aria-label="Add to Your Library" i],
+  [aria-label="Add to Liked Songs" i],
+  [aria-label="Remove from Your Library" i],
+  [aria-label="Remove from Liked Songs" i],
+  [aria-label="Add to playlist" i],
+  [aria-label="Search" i],
+  [aria-label="Search in Your Library" i],
+  [aria-label="What's New" i],
+  [aria-label="What’s New" i],
+  [aria-label="Friend Activity" i],
+  [aria-label="Home" i],
+  [aria-label="Explore" i],
+  [aria-label="Browse" i],
+  [aria-label="Your Library" i],
+  [aria-label="Collapse Your Library" i],
+  [aria-label="Expand Your Library" i],
+  [aria-label="Open Your Library" i],
+  [aria-label="Create playlist or folder" i],
+  [aria-label="Create" i],
+  [aria-label="Go back" i],
+  [aria-label="Go forward" i],
+  [aria-label="Download" i],
+  [aria-label^="More options" i],
+  [aria-label="Close" i],
+  [aria-label="Clear search field" i]
+)::before,
+button[data-me3-ctl]::before {
+  display: inline-grid;
+  place-items: center;
+  font-size: 22px;
+}
+
+:is(button, [role="button"], a)[aria-label="Play" i]::before, :is(button, [role="button"], a)[aria-label^="Play " i]::before { content: "play_arrow"; }
+:is(button, [role="button"], a)[aria-label="Play" i], :is(button, [role="button"], a)[aria-label^="Play " i] { --me3-fill: 1; }
+:is(button, [role="button"], a)[aria-label="Pause" i]::before, :is(button, [role="button"], a)[aria-label^="Pause " i]::before { content: "pause"; }
+:is(button, [role="button"], a)[aria-label="Pause" i], :is(button, [role="button"], a)[aria-label^="Pause " i] { --me3-fill: 1; }
+:is(button, [role="button"], a)[aria-label="Next" i]::before, :is(button, [role="button"], a)[aria-label="Next track" i]::before { content: "skip_next"; }
+:is(button, [role="button"], a)[aria-label="Next" i], :is(button, [role="button"], a)[aria-label="Next track" i] { --me3-fill: 1; }
+:is(button, [role="button"], a)[aria-label="Previous" i]::before, :is(button, [role="button"], a)[aria-label="Previous track" i]::before { content: "skip_previous"; }
+:is(button, [role="button"], a)[aria-label="Previous" i], :is(button, [role="button"], a)[aria-label="Previous track" i] { --me3-fill: 1; }
+:is(button, [role="button"], a)[aria-label="Shuffle" i]::before, :is(button, [role="button"], a)[aria-label="Enable shuffle" i]::before, :is(button, [role="button"], a)[aria-label="Disable shuffle" i]::before, :is(button, [role="button"], a)[aria-label="Enable smart shuffle" i]::before, :is(button, [role="button"], a)[aria-label="Disable smart shuffle" i]::before { content: "shuffle"; }
+:is(button, [role="button"], a)[aria-label="Repeat" i]::before, :is(button, [role="button"], a)[aria-label="Enable repeat" i]::before, :is(button, [role="button"], a)[aria-label="Enable repeat one" i]::before { content: "repeat"; }
+:is(button, [role="button"], a)[aria-label="Disable repeat" i]::before { content: "repeat_one"; }
+:is(button, [role="button"], a)[aria-label="Volume" i]::before, :is(button, [role="button"], a)[aria-label="Mute" i]::before { content: "volume_up"; }
+:is(button, [role="button"], a)[aria-label="Unmute" i]::before { content: "volume_off"; }
+:is(button, [role="button"], a)[aria-label="Queue" i]::before { content: "queue_music"; }
+:is(button, [role="button"], a)[aria-label="Lyrics" i]::before { content: "lyrics"; }
+:is(button, [role="button"], a)[aria-label="Connect to a device" i]::before { content: "devices"; }
+:is(button, [role="button"], a)[aria-label="Miniplayer" i]::before, :is(button, [role="button"], a)[aria-label="Open Miniplayer" i]::before, :is(button, [role="button"], a)[aria-label="Close Miniplayer" i]::before { content: "picture_in_picture_alt"; }
+:is(button, [role="button"], a)[aria-label="Full screen" i]::before, :is(button, [role="button"], a)[aria-label="Enter full screen" i]::before { content: "fullscreen"; }
+:is(button, [role="button"], a)[aria-label="Exit full screen" i]::before { content: "fullscreen_exit"; }
+:is(button, [role="button"], a)[aria-label="Now playing view" i]::before { content: "right_panel_open"; }
+:is(button, [role="button"], a)[aria-label="Save to Your Library" i]::before, :is(button, [role="button"], a)[aria-label="Add to Your Library" i]::before, :is(button, [role="button"], a)[aria-label="Add to Liked Songs" i]::before { content: "favorite"; }
+:is(button, [role="button"], a)[aria-label="Remove from Your Library" i]::before, :is(button, [role="button"], a)[aria-label="Remove from Liked Songs" i]::before { content: "favorite"; }
+:is(button, [role="button"], a)[aria-label="Remove from Your Library" i], :is(button, [role="button"], a)[aria-label="Remove from Liked Songs" i] { --me3-fill: 1; }
+:is(button, [role="button"], a)[aria-label="Add to playlist" i]::before { content: "playlist_add"; }
+:is(button, [role="button"], a)[aria-label="Search" i]::before, :is(button, [role="button"], a)[aria-label="Search in Your Library" i]::before { content: "search"; }
+:is(button, [role="button"], a)[aria-label="What's New" i]::before, :is(button, [role="button"], a)[aria-label="What’s New" i]::before { content: "notifications"; }
+:is(button, [role="button"], a)[aria-label="Friend Activity" i]::before { content: "group"; }
+:is(button, [role="button"], a)[aria-label="Home" i]::before { content: "home"; }
+:is(button, [role="button"], a)[aria-label="Explore" i]::before, :is(button, [role="button"], a)[aria-label="Browse" i]::before { content: "explore"; }
+:is(button, [role="button"], a)[aria-label="Your Library" i]::before, :is(button, [role="button"], a)[aria-label="Collapse Your Library" i]::before, :is(button, [role="button"], a)[aria-label="Expand Your Library" i]::before, :is(button, [role="button"], a)[aria-label="Open Your Library" i]::before { content: "library_music"; }
+:is(button, [role="button"], a)[aria-label="Create playlist or folder" i]::before, :is(button, [role="button"], a)[aria-label="Create" i]::before { content: "add"; }
+:is(button, [role="button"], a)[aria-label="Go back" i]::before { content: "chevron_left"; }
+:is(button, [role="button"], a)[aria-label="Go forward" i]::before { content: "chevron_right"; }
+:is(button, [role="button"], a)[aria-label="Download" i]::before { content: "download"; }
+:is(button, [role="button"], a)[aria-label^="More options" i]::before { content: "more_horiz"; }
+:is(button, [role="button"], a)[aria-label="Close" i]::before, :is(button, [role="button"], a)[aria-label="Clear search field" i]::before { content: "close"; }
+
+/* The library title stays clickable without the leading glyph. */
+.main-yourLibraryX-libraryRootlist :is(
+  [aria-label="Your Library" i],
+  [aria-label="Collapse Your Library" i],
+  [aria-label="Expand Your Library" i],
+  [aria-label="Open Your Library" i]
+)::before {
+  content: none !important;
+  display: none !important;
+}
+
+/* transport glyph sizes */
+:is(button, [role="button"], a):is([aria-label="Next" i], [aria-label="Next track" i], [aria-label="Previous" i], [aria-label="Previous track" i])::before {
+  font-size: 30px;
+}
+/* fallback colour for the saved heart when theme.js has not tagged it yet */
+:is(button, [role="button"], a):is([aria-label="Remove from Your Library" i], [aria-label="Remove from Liked Songs" i]) {
+  color: var(--me3-pink);
+}
+
+
+/* ---------------------------------------------------------------------
+   11. Like button: outlined heart when off, filled heart when on, with a new pop + ring
+      theme.js sets data-me3-like="on|off" on every like/save button (now-playing
+      bar, track rows, headers) and data-me3-pop for the moment a like happens.
+      Colour of a saved heart: --me3-like-color (section 1).
+   --------------------------------------------------------------------- */
+
+[data-me3-like] {
+  position: relative;
+  --me3-fill: 0;
+}
+
+[data-me3-like="on"] { --me3-fill: 1; }
+
+/* native icon, Lottie tick, labels: all gone */
+[data-me3-like] > * {
+  display: none !important;
+}
+
+[data-me3-like][data-me3-like]::before {
+  content: "favorite" !important;
+  display: block;
+  width: 1em;
+  height: 1em;
+  font-size: 24px;
+  text-align: center;
+  color: var(--me3-subtext);
+  transition: color 160ms ease;
+}
+
+[data-me3-like]:hover::before { color: var(--me3-mauve); }
+[data-me3-like="on"]::before,
+[data-me3-like="on"]:hover::before { color: var(--me3-like-color); }
+
+[data-me3-pop]::before {
+  animation: me3-heart-pop 560ms var(--me3-ease-spring) both;
+}
+
+[data-me3-pop]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 36px;
+  height: 36px;
+  translate: -50% -50%;
+  border: 2px solid var(--me3-mauve);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: me3-heart-ring 620ms var(--me3-ease-std) both;
+}
+
+@keyframes me3-heart-pop {
+  0% { transform: scale(.45); }
+  45% { transform: scale(1.32); }
+  72% { transform: scale(.94); }
+  100% { transform: scale(1); }
+}
+
+@keyframes me3-heart-ring {
+  0% { transform: scale(.35); opacity: .95; border-color: var(--me3-mauve); }
+  100% { transform: scale(1.55); opacity: 0; border-color: var(--me3-like-color); }
+}
+
+/* Spotify's own save animation (green circle + tick) */
+.main-addButton-zoomInAnimation,
+.main-addButton-zoomInAnimation * {
+  animation: none !important;
+}
+
+/* ---------------------------------------------------------------------
+   12. Toasts: themed instead of white
+   --------------------------------------------------------------------- */
+.notistack-Snackbar,
+.notistack-MuiContent,
+.notistack-Snackbar [role="alert"],
+.notistack-Snackbar :is(.encore-inverted-light-set, .encore-dark-theme, .encore-base-set) {
+  --background-base: var(--me3-surface) !important;
+  --background-highlight: var(--me3-surface-1) !important;
+  --background-press: var(--me3-surface-2) !important;
+  --background-elevated-base: var(--me3-surface) !important;
+  --text-base: var(--me3-text) !important;
+  --text-subdued: var(--me3-subtext) !important;
+  --text-bright-accent: var(--me3-mauve) !important;
+  --essential-base: var(--me3-text) !important;
+  --essential-subdued: var(--me3-subtext) !important;
+  color: var(--me3-text) !important;
+}
+
+.notistack-MuiContent,
+.notistack-Snackbar [role="alert"] {
+  color: var(--me3-text) !important;
+  background: var(--me3-surface) !important;
+  background-image: none !important;
+  border: 1px solid rgb(203 166 247 / 22%) !important;
+  border-radius: var(--me3-radius-medium) !important;
+  box-shadow: 0 12px 32px rgb(17 17 27 / 45%) !important;
+}
+
+.notistack-Snackbar :is(.BoxComponent-box-elevated, [class*="BoxComponent"]) {
+  color: var(--me3-text) !important;
+  background: var(--me3-surface) !important;
+  background-image: none !important;
+  border: 1px solid rgb(203 166 247 / 22%);
+  border-radius: var(--me3-radius-medium) !important;
+  box-shadow: 0 12px 32px rgb(17 17 27 / 45%) !important;
+}
+
+.notistack-Snackbar :is(span, p, div, a) {
+  color: inherit;
+}
+
+.notistack-Snackbar :is(a, button) {
+  color: var(--me3-mauve) !important;
+}
+
+.notistack-MuiContent-error,
+.notistack-Snackbar [data-variant="error"],
+.notistack-Snackbar :is(.notistack-MuiContent-error, [data-variant="error"]) :is(.BoxComponent-box-elevated, [class*="BoxComponent"]),
+.notistack-Snackbar:is(.notistack-MuiContent-error, [data-variant="error"]) :is(.BoxComponent-box-elevated, [class*="BoxComponent"]) {
+  border-color: var(--me3-red) !important;
+}
+
+/* Spotify's coach-mark bubbles */
+.main-notificationBubble-NotificationBubble {
+  color: var(--me3-crust) !important;
+  background: var(--me3-mauve) !important;
+  border-radius: var(--me3-radius-medium) !important;
+}
+
+.main-notificationBubble-isError {
+  background: var(--me3-red) !important;
+}
+
+/* ---------------------------------------------------------------------
+   13. Scrollbars
+       - Spotify's main views use OverlayScrollbars (.os-scrollbar-*): rounded
+         vertical handle, no horizontal bar at all.
+       - Everything else uses the native bar via ::-webkit-scrollbar. Do NOT
+         set scrollbar-width / scrollbar-color on *: current Chromium then
+         ignores every ::-webkit-scrollbar rule below, which is why the bar
+         was never rounded.
+   --------------------------------------------------------------------- */
+.os-scrollbar {
+  --os-size: 14px;
+  --os-padding-perpendicular: 3px;
+  --os-padding-axis: 4px;
+  --os-track-border-radius: 999px;
+  --os-track-bg: transparent;
+  --os-track-bg-hover: transparent;
+  --os-track-bg-active: transparent;
+  --os-handle-border-radius: 999px;
+  --os-handle-bg: var(--me3-surface-2);
+  --os-handle-bg-hover: var(--me3-mauve);
+  --os-handle-bg-active: var(--me3-mauve);
+  --os-handle-min-size: 44px;
+  --os-handle-perpendicular-size: 8px;
+  --os-handle-perpendicular-size-hover: 10px;
+  --os-handle-perpendicular-size-active: 10px;
+}
+
+.os-scrollbar .os-scrollbar-track,
+.os-scrollbar .os-scrollbar-handle {
+  border-radius: var(--me3-radius-pill) !important;
+}
+
+.os-scrollbar .os-scrollbar-handle {
+  background: var(--me3-surface-2) !important;
+  transition: background-color 160ms ease;
+}
+
+.os-scrollbar .os-scrollbar-handle:hover,
+.os-scrollbar .os-scrollbar-handle:active,
+.os-scrollbar-handle.active {
+  background: var(--me3-mauve) !important;
+}
+
+.os-scrollbar-horizontal,
+.os-scrollbar.os-scrollbar-horizontal {
+  display: none !important;
+}
+
+*::-webkit-scrollbar:vertical {
+  width: 14px !important;
+}
+
+*::-webkit-scrollbar:horizontal {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+*::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track-piece {
+  margin: 4px 0 !important;
+  border: 3px solid transparent !important;
+  border-radius: var(--me3-radius-pill) !important;
+  background: transparent !important;
+  background-clip: padding-box !important;
+}
+
+*::-webkit-scrollbar-thumb {
+  min-height: 40px !important;
+  border: 3px solid transparent !important;
+  border-radius: var(--me3-radius-pill) !important;
+  background: var(--me3-surface-2) !important;
+  background-clip: padding-box !important;
+  transition: background-color 160ms ease;
+}
+
+*::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:active {
+  background: var(--me3-mauve) !important;
+  background-clip: padding-box !important;
+}
+
+*::-webkit-scrollbar-corner { background: transparent; }
+
+/* The theme script writes this class when the library is folded. Keeping the
+   state on <html> avoids a document-wide :has() invalidation on Home updates. */
+html.me3-library-collapsed :is(.main-yourLibraryX-libraryRootlist, .main-yourLibraryX-libraryContainer) .os-scrollbar {
+  display: none !important;
+}
+
+html.me3-library-collapsed :is(.main-yourLibraryX-libraryRootlist, .main-yourLibraryX-libraryContainer, :is(.main-yourLibraryX-libraryRootlist, .main-yourLibraryX-libraryContainer) *) {
+  scrollbar-width: none !important;
+}
+
+html.me3-library-collapsed :is(.main-yourLibraryX-libraryRootlist, .main-yourLibraryX-libraryContainer, :is(.main-yourLibraryX-libraryRootlist, .main-yourLibraryX-libraryContainer) *)::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Carousels and chip rows scroll sideways, but never draw a bar */
+:is(
+  .x-carousel-carousel,
+  .search-searchCategory-carousel,
+  .main-home-filterChipsContainer,
+  .main-shelf-shelf,
+  .main-gridContainer-gridContainer,
+  [data-me3-shelf],
+  [data-testid*="carousel" i]
+) {
+  scrollbar-width: none !important;
+}
+
+:is(
+  .x-carousel-carousel,
+  .search-searchCategory-carousel,
+  .main-home-filterChipsContainer,
+  .main-shelf-shelf,
+  .main-gridContainer-gridContainer,
+  [data-me3-shelf],
+  [data-testid*="carousel" i]
+)::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------------------
+   14. Misc
+   --------------------------------------------------------------------- */
+::selection {
+  color: var(--me3-crust);
+  background: var(--me3-mauve);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+  .me3-seek__wave { animation: none; }
+}

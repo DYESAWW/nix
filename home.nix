@@ -61,13 +61,13 @@ in
         ls = "lsd -a";
         try = "nix-shell -p";
         batt = "dualsensectl battery";
-        hswitch = "home-manager switch";
         rebuild = "sudo nixos-rebuild switch";
         hconf = "sudo nano /etc/nixos/home.nix";
         sysconf = "sudo nano /etc/nixos/configuration.nix";
         flake = "sudo nano /etc/nixos/flake.nix";
         frebuild = "sudo nixos-rebuild switch --flake /etc/nixos#DYESAW-PC";
         commit = "cd /etc/nixos && sudo git add -A && sudo git commit -m 'generic commit' && sudo git push -u origin main";
+        update = "sudo nix flake update --flake /etc/nixos && sudo nixos-rebuild switch --flake /etc/nixos#DYESAW-PC";
       };
 
       initContent = ''
@@ -111,7 +111,6 @@ in
         enable = true;
         wayland = true;
         enabledExtensions = with spicePkgs.extensions; [
-          copyLyrics
 #         betterGenres
           spicyLyrics 
           playNext
@@ -121,12 +120,12 @@ in
           beautifulLyrics
           copyToClipboard
           volumePercentage
-          songStats
         ];
 
         theme = {
-          name = "Lucid";
-          src = ./themes/Lucid;
+          name = "material-expressive";
+          #src = ./themes/Lucid;
+          src = ./themes/material-expressive-spotify;
         };
       };
   };
