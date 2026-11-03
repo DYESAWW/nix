@@ -13,7 +13,8 @@
 inputs = {
   nixpkgs-python310.url = "github:NixOS/nixpkgs/b122cf0";
   nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
+  nixpkgs-spotify.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+  
   spicetify-nix = {
     url = "github:Gerg-L/spicetify-nix";
   };

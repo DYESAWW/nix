@@ -17,7 +17,11 @@ let
     system = pkgs.stdenv.hostPlatform.system;
   };
 
-  
+    newPkgs = import inputs.nixpkgs-spotify {
+      system = pkgs.stdenv.hostPlatform.system;
+      config.allowUnfree = true;
+  };
+
 in
 {
   home.username = "DYESAW";
@@ -125,7 +129,7 @@ in
         theme = {
           name = "material-expressive";
           #src = ./themes/Lucid;
-          src = ./themes/material-expressive-spotify;
+          src = ./themes/material-expressive;
         };
       };
   };
